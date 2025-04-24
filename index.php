@@ -10,11 +10,11 @@
     <title>sign up & sign in page</title>
 </head>
 <body>
+    <div class="overlay"></div>
     <div class="container">
         <div class="left-logo">
             <img src="image\logo.svg" alt="No logo">
         </div>
-
         <div class="right_side">
             <div class="right-items">
                 <h1>Happening now</h1>
@@ -57,61 +57,73 @@
                             <p>Sign in</p>
                         </a>
                     </div>
-
-                 </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Add New User Form Start-->
+    <!-- Sign-up form -->
     <div class="signup-form">
-        <form class="signup-new">
+        <form class="signup-new" action="controller.php" method="post" enctype= "multipart/form-data">
             <div class="form-logo">
                 <span class="close-form"><i class="fa fa-times" aria-hidden="true"></i></span>
                 <img src="image\logo.svg" alt="No logo" style="width: 10%;">
             </div>
             <h2 style="font-size: 20px;font-weight: bold;">Create your account</h2>
             <div class="form-group">
-                <label>Name:</label>
-                <input type="text" class="form-control" placeholder="Enter Name" aria-label="name" aria-describedby="basic-addon1">
+                <label>Name: <span id="errorName"></span></label>
+                <input type="hidden" name="newuserinsert">
+                <input type="text" name="name" class="form-control" placeholder="Enter Name" aria-label="name" id="Name" aria-describedby="basic-addon1">
             </div>
 
             <div class="form-group">
-                <label>Username:</label>
-                <input type="text" class="form-control" placeholder="Enter username" aria-label="Username" aria-describedby="basic-addon1">
+                <label>Username: <span id="errorUsername"></span></label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" aria-label="Username" id="Username" aria-describedby="basic-addon1">
             </div>
 
             <div class="form-group">
-                <label>Password:</label>
-                <input type="password" class="form-control" placeholder="Enter Password" aria-label="password" aria-describedby="basic-addon1">
+                <label>Password: <span id="errorPassword"></span></label>
+                <input type="password" name="password" class="form-control" placeholder="Enter Password" aria-label="password" id="Password" aria-describedby="basic-addon1">
             </div>
             
             <div class="form-group">
-                <label>Email:</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <label>Email: <span id="errorEmail"></span></label>
+                <input type="email" name="email" class="form-control" aria-describedby="emailHelp" id="Email" placeholder="Enter email">
             </div>
 
             <div class="form-group">
-                <label>Date of birth:</label>
-                <input type="date" class="form-control">
+                <label>Date of birth: <span id="errorDOB"></span></label>
+                <input type="date" name="dob" class="form-control" id="DOB">
                 <span>This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.</span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 
-    <!-- Sign-In Popup -->
+    <!-- Sign-In form -->
     <div class="signin-form">
         <div class="signin-popup">
             <span class="close-signin"><i class="fa fa-times"></i></span>
+            <span class="signup-logo"><img src="image\logo.svg" alt="No logo" style="width: 10%;"></span>
             <h2>Sign in to X</h2>
-            <button class="google-btn"><img src="image\google_logo.png" alt="No G-logo"> Sign in with Google</button>
-            <button class="apple-btn"><i class="fa fa-apple"></i> Sign in with Apple</button>
+            <div style="width: 100%;">
+                <button class="google-btn"><img src="image\google_logo.png" alt="No G-logo"> Sign in with Google</button>
+                <button class="apple-btn"><i class="fa fa-apple"></i> Sign in with Apple</button>
+            </div>
             <div class="or-line"><hr><span>or</span><hr></div>
-            <input type="text" class="form-control" placeholder="Phone, email, or username">
-            <button class="btn btn-primary full-btn">Next</button>
-            <button class="btn btn-light full-btn">Forgot password?</button>
-            <p>Don't have an account? <a href="#">Sign up</a></p>
+            <div style="width: 100%;" class="inputs">
+                <form class="empty-form">
+                    <input type="text" class="form-control" placeholder="email or username">
+                    <input type="password" class="form-control" placeholder="Enter Password">
+                </form>
+            </div>
+            <div style="width: 100%;">
+                <button type="submit" id="signin-submit" class="btn btn-primary full-btn">Login</button>
+                <button class="btn btn-light full-btn" id="forgot-pass">Forgot password?</button>
+            </div>
+            <div style="width: 100%;" class="signup-bt">
+                <p>Don't have an account? <a href="#">Sign up</a></p>
+            </div>
         </div>
     </div>
         
@@ -140,5 +152,7 @@
             </p> 
         </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

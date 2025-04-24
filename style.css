@@ -1,6 +1,6 @@
 .container{
     display: flex;
-    height: 100%;
+    height: 90%;
 }
 
 .left-logo{
@@ -216,11 +216,11 @@
 .signup-form{
     display: none;
     position: absolute;
-    top: 50px;
-    left: 500px;
-    width: 400px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    top: 30px;
+    left: 450px;
+    width: 480px;
+    background-color: white;
+    border: 1px solid rgb(211, 210, 210);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 20px 25px;
@@ -248,9 +248,11 @@
     z-index: 9999;
 }
 
+
+/* sign in form css */
 .signin-popup {
-    width: 400px;
-    background: #fff;
+    width: 500px;
+    background: white;
     padding: 30px;
     border-radius: 10px;
     position: relative;
@@ -260,18 +262,20 @@
 }
 
 .signin-popup h2 {
-    text-align: center;
     margin-bottom: 20px;
+    margin: 20px 20%;
     font-weight: bold;
+    color: black;
 }
 
 .google-btn, .apple-btn {
-    width: 100%;
+    width: 60%;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    margin-left: 20%;
+    border: 1px solid rgb(194, 191, 191);
     border-radius: 30px;
-    background: #fff;
+    background: white;
     font-size: 15px;
     display: flex;
     align-items: center;
@@ -279,13 +283,13 @@
 }
 
 .google-btn img, .apple-btn i {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .or-line {
     display: flex;
     align-items: center;
-    margin: 20px 0;
+    margin: 0 20%;
 }
 
 .or-line hr {
@@ -299,18 +303,75 @@
 }
 
 .full-btn {
-    width: 100%;
-    margin-top: 10px;
+    width: 60%;
+    margin-bottom: 10px !important;
+    border-radius: 20px !important;
+    margin: 0 20%;
+}
+
+.inputs input{
+    margin-bottom: 10px !important;
+    width: 60%;
+    margin: 0 20%;
 }
 
 .close-signin {
     position: absolute;
     top: 15px;
-    right: 20px;
+    left: 20px;
     font-size: 20px;
     cursor: pointer;
 }
 
 .google-btn img{
     width: 18px;
+}
+
+.signup-logo{
+    position: absolute;
+    top: 15px;
+    left: 47%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.signup-bt p{
+    margin: 0 20%;
+}
+
+#signin-submit{
+    background-color: rgb(17, 17, 17);
+    color: white;
+}
+
+#signin-submit:hover{
+    background-color: rgb(44, 43, 43);
+    color: white;
+}
+
+#forgot-pass{
+    background-color: white;
+    border: 1px solid rgb(202, 200, 200) !important;
+    color: black;
+    font-weight: bold;
+}
+
+#forgot-pass:hover{
+    background-color: rgb(226, 223, 223);
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 998; 
+}
+
+.signup-form, .signin-form {
+    z-index: 999;
+    position: fixed;
 }
