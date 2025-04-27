@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    //open signup form
     $('.create-account').click(function (e) {
         $(".signup-new")[0].reset();
         $('.signin-form').fadeOut();
@@ -9,17 +10,17 @@ $(document).ready(function () {
         $("#errorDOB").text("");
         e.preventDefault();
         $('.signup-form').fadeIn();
-        $('.overlay').fadeIn(); // show overlay
+        $('.overlay').fadeIn();
         $('body').css('overflow', 'hidden');
     });
 
     $('.close-form').click(function () {
         $('.signup-form').fadeOut();
-        $('.overlay').fadeOut(); // hide overlay
+        $('.overlay').fadeOut();
         $('body').css('overflow', 'auto');
     });
 
-    // Signin popup
+    // open signin form 
     $('.sign-in-account').click(function (e) {
         $(".empty-form")[0].reset();
         e.preventDefault();
@@ -34,7 +35,7 @@ $(document).ready(function () {
         $('body').css('overflow', 'auto');
     });
 
-    // Prevent clicks on background when popup is open sign up form
+    // Prevent clicks on background when popup is open form
     $('.signup-form, .signin-form').on('click', function (e) {
         e.stopPropagation();
     });
@@ -68,7 +69,26 @@ $(document).ready(function () {
             if($("#Username").attr("id") === inputID){
                 var usernameVal = $(this).val().trim();
                 if(usernamergxpattern.test(usernameVal)){
-                 $("#errorUsername").text("");
+                    //check username exits
+                    var usercheck = "action"
+                    $.ajax({
+                        url: "controller.php",
+                        type: 'post',
+                        data: {
+                            "username": usernameVal,
+                            "usernameexits": usercheck
+                        },
+                        success : function(response){
+                            var userexitsdata = JSON.parse(response);
+                            if(userexitsdata.status == 'failed'){
+                                $("#validuserinput").val("failed");
+                                $("#errorUsername").text("username has already been taken.");
+                            }else{
+                                $("#validuserinput").val("success");
+                                $("#errorUsername").text("");
+                            }
+                        }
+                    });
                 }else{
                  $("#errorUsername").text("(!invalid username)allow only a-z,0-9,_,.(5-15)");
                  $("#errorUsername").css({"color":"red", "fontSize":"12px", "font-weight":"500"});
@@ -80,9 +100,28 @@ $(document).ready(function () {
                 var emailVal = $(this).val().trim();
                if(emailRgxpattern.test(emailVal)){
                 $("#errorEmail").text("");
+                //check email exits
+                var emailcheck = "action"
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "email": emailVal,
+                        "mailexits": emailcheck
+                    },
+                    success : function(response){
+                        var data = JSON.parse(response)
+                        if(data.status == 'failed'){
+                            $("#validmailinput").val("failed");
+                            $("#errorEmail").text("Email has already been taken.");
+                        }else{
+                            $("#errorEmail").text("");
+                            $("#validmailinput").val("success");
+                        }
+                    }
+                });
                }else{
                 $("#errorEmail").text("Invalid email...!");
-                $("#errorEmail").css({"color":"red", "fontSize":"12px", "font-weight":"500"});
                }
             }
 
@@ -99,11 +138,12 @@ $(document).ready(function () {
         }
     });
 
-    //on focus 
+    //remove validation on focus 
     $("input").focus(function(){
         let focusID = $(this).attr("id");
         $("#error"+focusID).text("");
     });
+
 
     // validation on submit
     $(".signup-new").submit(function(event){
@@ -136,7 +176,26 @@ $(document).ready(function () {
             // Regex for Name on submit
             userValue = $("#Username").val();
             if(usernamepattern.test(userValue)){
-                $("#errorUsername").text("");
+                //check username exits
+                var usernamecheck = "action"
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "username": userValue,
+                        "usernameexits": usernamecheck
+                    },
+                    success : function(response){
+                        var userdata = JSON.parse(response);
+                        if(userdata.status == 'failed'){
+                            $("#validuserinput").val("failed");
+                            $("#errorUsername").text("username has already been taken.");
+                        }else{
+                            $("#validuserinput").val("success");
+                            $("#errorUsername").text("");
+                        }
+                    }
+                });
             }else{
                 $("#errorUsername").text("(!invalid username)allow only a-z,0-9,_,.(5-15)");
                 $("#errorUsername").css({"color":"red", "fontSize":"12px", "font-weight":"500"});
@@ -161,15 +220,32 @@ $(document).ready(function () {
 
         if($("#Email").val()=== ''){
             $("#errorEmail").text("Email field is Require");
-            $("#errorEmail").css({"color":"red", "fontSize":"12px", "font-weight":"500"});
             isValid = false;
         }else{
             emailValue = $("#Email").val();
             if(emailpattern.test(emailValue)){
-                $("#errorEmail").text("");
+                //check email exits
+                var emailcheck = "action"
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "email": emailValue,
+                        "mailexits": emailcheck
+                    },
+                    success : function(response){
+                        var data = JSON.parse(response);
+                        if(data.status == 'failed'){
+                            $("#validmailinput").val("failed");
+                            $("#errorEmail").text("Email has already been taken.");
+                        }else{
+                            $("#validmailinput").val("success");
+                            $("#errorEmail").text("");
+                        }
+                    }
+                });
             }else{
                 $("#errorEmail").text("Invalid email...!");
-                $("#errorEmail").css({"color":"red", "fontSize":"12px", "font-weight":"500"});
                 isValid = false;
             }
         }
@@ -180,8 +256,23 @@ $(document).ready(function () {
             isValid = false;
         }
 
+        if($("#validmailinput").val()=== 'failed'){
+            isValid = false;
+        }
+
+        if($("#validuserinput").val()=== 'failed'){
+            isValid = false;
+        }
+
         if(!isValid){
             event.preventDefault();
+        }else{
+
         }
-    })
+    });
+
+    // login request
+    // $(".signup-new").submit(function(e){
+    // })
+    
 });

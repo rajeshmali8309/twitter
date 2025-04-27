@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .container{
     display: flex;
     height: 90%;
@@ -217,7 +223,7 @@
     display: none;
     position: absolute;
     top: 30px;
-    left: 450px;
+    left: 500px;
     width: 480px;
     background-color: white;
     border: 1px solid rgb(211, 210, 210);
@@ -315,6 +321,16 @@
     margin: 0 20%;
 }
 
+.btn-primary{
+    width: 60%;
+    border-radius: 25px !important;
+    background-color: black !important;
+}
+
+.btn-primary:hover{
+    background-color: rgb(39, 38, 38) !important;
+}
+
 .close-signin {
     position: absolute;
     top: 15px;
@@ -375,3 +391,251 @@
     z-index: 999;
     position: fixed;
 }
+
+#errorEmail{
+    font-size: 12px;
+    font-weight: 500;
+    color: red;
+}
+
+#errorUsername{
+    font-size: 12px;
+    font-weight: 500;
+    color: red;
+}
+
+/* home tab css */
+.pagecontainer{
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.index-logo{
+    margin-left: 12px;
+}
+
+.index-logo img{
+    width: 15%;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: white;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgb(214, 209, 209);
+    flex-shrink: 0;
+    position: fixed;
+    left: 30px;
+    top: 0;
+}
+
+.sidebar .page-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: rgb(99, 91, 91);
+    font-weight: 700;
+    font-size: 20px;
+    padding: 8px 12px;
+    border-radius: 25px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar a:hover {
+    background-color: rgb(247, 241, 241);
+    color: rgb(8, 8, 8);
+    text-decoration: none;
+}
+
+.post-btn {
+    margin: 1px 0;
+    padding: 14px;
+    text-align: center;
+    font-weight: bold;
+    background-color: rgb(20, 20, 20);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.post-btn:hover {
+    background-color: rgb(54, 53, 53);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer; 
+    padding: 3px;   
+}
+
+.user-profile:hover{
+    background-color: rgb(243, 240, 240);
+    border-radius: 8px;
+}
+
+.user-profile .avatar {
+    width: 36px;
+    height: 36px;
+    background-color: rgb(17, 139, 17);
+    border-radius: 50%;
+    color: white;
+    font-weight: 500;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-main {
+    flex-grow: 1;
+    margin: 0 350px 0 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.center-header {
+    background-color: rgb(253, 252, 252, 0.9);
+    width: 53.9%;
+    z-index: 10;
+    border-bottom: 1px solid rgb(219, 218, 218);
+    border-right: 1px solid rgb(219, 218, 218);
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    font-size: 18px;
+    position: fixed;
+}
+
+#for-you{
+    width: 50%;
+    text-align: center;
+    padding: 15px;
+}
+#for-you:hover{
+    background-color: rgb(245, 241, 241);
+    cursor: pointer;
+}
+
+#Following{
+    width: 50%;
+    text-align: center;
+    padding: 15px;
+}
+
+#Following:hover{
+    background-color: rgb(245, 241, 241);
+    cursor: pointer;
+}
+
+.center-content {
+    flex-grow: 1;
+    padding: 20px 40px;
+    border-right: 1px solid rgb(219, 218, 218);
+    overflow-y: auto;
+}
+
+.post {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-box{
+    background-color: white;
+    position: fixed;
+    width: 280px;
+}
+
+#search{
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 20px;
+    border: 1px solid rgb(202, 200, 200);
+}
+
+.rightbar {
+    width: 330px;
+    background-color: white;
+    padding: 20px;
+    padding-top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.subscribe{
+    background: white;
+    border: 1px solid rgb(202, 200, 200);
+    border-radius: 12px; padding: 15px;
+    margin-bottom: 20px;
+    margin-top: 70px;
+}
+
+.subscribe h3{
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.subscribe p{
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+#subscribe-btn{
+    background-color: rgb(55, 157, 197);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.trending-section {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.trending-section h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.trending-section p {
+    margin: 5px 0;
+}
+
+.trending-section p strong {
+    display: block;
+    font-size: 14px;
+}
+
+.trending-section p small {
+    font-size: 12px;
+    color: gray;
+}
+

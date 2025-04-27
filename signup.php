@@ -6,6 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="icon" type="image/x-icon" href="image/logo.svg">
     <script src="script.js"></script>
     <title>sign up & sign in page</title>
 </head>
@@ -69,34 +70,40 @@
                 <span class="close-form"><i class="fa fa-times" aria-hidden="true"></i></span>
                 <img src="image\logo.svg" alt="No logo" style="width: 10%;">
             </div>
-            <h2 style="font-size: 20px;font-weight: bold;">Create your account</h2>
-            <div class="form-group">
-                <label>Name: <span id="errorName"></span></label>
-                <input type="hidden" name="newuserinsert">
-                <input type="text" name="name" class="form-control" placeholder="Enter Name" aria-label="name" id="Name" aria-describedby="basic-addon1">
-            </div>
+            <div>
+                <h2 style="font-size: 20px;font-weight: bold;">Create your account</h2>
+                <div class="form-group">
+                    <label>Name: <span id="errorName"></span></label>
+                    <input type="hidden" name="newuserinsert">
+                    <input type="text" name="name" class="form-control" placeholder="Enter Name" aria-label="name" id="Name" aria-describedby="basic-addon1">
+                </div>
 
-            <div class="form-group">
-                <label>Username: <span id="errorUsername"></span></label>
-                <input type="text" name="username" class="form-control" placeholder="Enter username" aria-label="Username" id="Username" aria-describedby="basic-addon1">
-            </div>
+                <div class="form-group">
+                    <label>Username: <span id="errorUsername"></span></label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" aria-label="Username" id="Username" aria-describedby="basic-addon1">
+                    <input type="hidden" id="validuserinput" value="success">
+                </div>
 
-            <div class="form-group">
-                <label>Password: <span id="errorPassword"></span></label>
-                <input type="password" name="password" class="form-control" placeholder="Enter Password" aria-label="password" id="Password" aria-describedby="basic-addon1">
-            </div>
-            
-            <div class="form-group">
-                <label>Email: <span id="errorEmail"></span></label>
-                <input type="email" name="email" class="form-control" aria-describedby="emailHelp" id="Email" placeholder="Enter email">
-            </div>
+                <div class="form-group">
+                    <label>Password: <span id="errorPassword"></span></label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter Password" aria-label="password" id="Password" aria-describedby="basic-addon1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email: <span id="errorEmail"></span></label>
+                    <input type="email" name="email" class="form-control" aria-describedby="emailHelp" id="Email" placeholder="Enter email">
+                    <input type="hidden" id="validmailinput" value="success">
+                </div>
 
-            <div class="form-group">
-                <label>Date of birth: <span id="errorDOB"></span></label>
-                <input type="date" name="dob" class="form-control" id="DOB">
-                <span>This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.</span>
+                <div class="form-group">
+                    <label>Date of birth: <span id="errorDOB"></span></label>
+                    <input type="date" name="dob" class="form-control" id="DOB">
+                    <span>This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.</span>
+                </div>
+                <div style="width: 100%; text-align: center;">
+                    <button type="submit" class="btn btn-primary" id="signup-submit">Submit</button>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 
@@ -111,16 +118,18 @@
                 <button class="apple-btn"><i class="fa fa-apple"></i> Sign in with Apple</button>
             </div>
             <div class="or-line"><hr><span>or</span><hr></div>
-            <div style="width: 100%;" class="inputs">
-                <form class="empty-form">
-                    <input type="text" class="form-control" placeholder="email or username">
-                    <input type="password" class="form-control" placeholder="Enter Password">
-                </form>
-            </div>
-            <div style="width: 100%;">
-                <button type="submit" id="signin-submit" class="btn btn-primary full-btn">Login</button>
-                <button class="btn btn-light full-btn" id="forgot-pass">Forgot password?</button>
-            </div>
+
+            <form class="empty-form" action="controller.php" method="post" enctype= "multipart/form-data">
+                <div style="width: 100%;" class="inputs">
+                    <input type="text" class="form-control" name="loginid" id="loginid" placeholder="email or username">
+                    <input type="password" class="form-control" name="loginpassword" id="loginpassword" placeholder="Enter Password">
+                </div>
+                <div style="width: 100%;">
+                    <button type="submit" id="signin-submit" class="btn btn-primary full-btn">Login</button>
+                    <button class="btn btn-light full-btn" id="forgot-pass">Forgot password?</button>
+                </div>
+            </form>
+
             <div style="width: 100%;" class="signup-bt">
                 <p>Don't have an account? <a href="#">Sign up</a></p>
             </div>
@@ -148,11 +157,12 @@
                 <a href="">Developers</a> |
                 <a href="">Directory</a> |
                 <a href="">Settings</a> |
-                <span>© 2025 X Corp</span>
+                <span>© <?php echo date("Y") ?> X Corp</span>
             </p> 
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js">
+    </script>
 </body>
 </html>
