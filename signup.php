@@ -119,10 +119,15 @@
             </div>
             <div class="or-line"><hr><span>or</span><hr></div>
 
-            <form class="empty-form" action="controller.php" method="post" enctype= "multipart/form-data">
+            <form class="login-form" action="controller.php" method="post" enctype= "multipart/form-data">
                 <div style="width: 100%;" class="inputs">
+                    <input type="hidden" id="validlogin" value="success">
+                    <span id="error-id" style="color:red; margin-left: 20%;"></span>
                     <input type="text" class="form-control" name="loginid" id="loginid" placeholder="email or username">
+
+                    <span id="error-pass" style="color:red; margin-left: 20%;"></span>
                     <input type="password" class="form-control" name="loginpassword" id="loginpassword" placeholder="Enter Password">
+                    <span id="invalid-user" style="color:red; margin-left: 20%;"></span>
                 </div>
                 <div style="width: 100%;">
                     <button type="submit" id="signin-submit" class="btn btn-primary full-btn">Login</button>
@@ -131,7 +136,7 @@
             </form>
 
             <div style="width: 100%;" class="signup-bt">
-                <p>Don't have an account? <a href="#">Sign up</a></p>
+                <p>Don't have an account? <a id="signup-click">Sign up</a></p>
             </div>
         </div>
     </div>
