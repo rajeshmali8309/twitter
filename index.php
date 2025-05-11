@@ -12,6 +12,7 @@ if(isset($_SESSION["userid"])){ ?>
 <body>
     <div class="pagecontainer">
     <?php
+        include 'login_user_data.php';
         // include file of left-sidebar 
         include 'layout/left-sidebar.php';
         ?>
@@ -44,6 +45,7 @@ if(isset($_SESSION["userid"])){ ?>
             ?>
         </div>
     </div>
+    <?php include 'layout/post_model.php'; ?>
 </body>
 <script>
     $(document).ready(function () {

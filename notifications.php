@@ -54,6 +54,7 @@ if(isset($_SESSION["userid"])){ ?>
             include 'layout/notification_footer_right.php';
         ?>
     </div>
+    <?php include 'layout/post_model.php'; ?>
 </body>
 <script>
     $(".trending-section").css({"margin-top":"64px"});

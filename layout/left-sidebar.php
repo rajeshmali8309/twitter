@@ -18,7 +18,12 @@ include 'login_user_data.php';
         <button class="post-btn">Post</button>
     </div>
     <div class="user-profile">
-        <div class="avatar"><?php echo $_SESSION['firstchr']?></div>
+        <div class="avatar">
+            <?php if(empty($userDAta['profile_picture'])){
+                echo $_SESSION['firstchr'];
+            }else{
+                ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="dp" alt="No-dp" width="100%" height="100%"> <?php
+            }?></div>
         <div>
             <div style="color:black; font-size: 18px;"><strong><?php echo $userDAta['name']?></strong></div>
             <div style="color: rgb(95, 94, 94);; font-size: 15px;">@<?php if(isset($_SESSION['userid'])){ echo $_SESSION['userid']; }?></div>

@@ -398,18 +398,18 @@ $(document).ready(function () {
     });
 
     // edit profile form open close
-    $("#edit-profile-btn").click(function(){
+    $(document).on("click", "#edit-profile-btn", function() {
         $("#edit-user-data")[0].reset();
         $("#edit-profile-modal").fadeIn();
     });
 
-    $(".close-edit-form").click(function(){
+    $(document).on("click", ".close-edit-form", function() {
         $("#edit-user-data")[0].reset();
         $("#edit-profile-modal").fadeOut();
     });
 
     // start Insert Data using ajax request
-    $("#edit-user-data").submit(function(event){
+    $(document).on("submit", "#edit-user-data", function(event) {
         event.preventDefault();
         userDataUpdate();
     });
@@ -425,9 +425,18 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function(insertreturn){
-                $("#show-msg").html(insertreturn);
-                // $('#userForm').fadeOut();
+                $('#edit-profile-modal').fadeOut();
+                profilepageData();
             }
         });
     }
+
+    // Open post-btn model 
+    $(document).on("click", ".post-btn", function () {
+        $("#post-modal-overlay").fadeIn(300);
+    });
+
+    $(document).on("click", ".close-post-modal", function () {
+        $("#post-modal-overlay").fadeOut(300);
+    });
 });
