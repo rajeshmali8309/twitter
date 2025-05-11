@@ -4,18 +4,18 @@ session_start();
 
 // insert operation on ajax request
 if (isset($_REQUEST['newuserinsert'])) {
-    $Name = trim(isset($_POST['name']) ? $_POST['name'] : "");
     $Username = trim(isset($_POST['username']) ? $_POST['username'] : "");
-    $Password = trim(isset($_POST['password']) ? $_POST['password'] : "");
+    $Name = trim(isset($_POST['name']) ? $_POST['name'] : "");
     $Email = trim(isset($_POST['email']) ? $_POST['email'] : "");
+    $Password = trim(isset($_POST['password']) ? $_POST['password'] : "");
     $Dob = isset($_POST['dob']) ? $_POST['dob'] : "";
-  
-    $new_user_insert_query = "INSERT INTO `useraccount`(`name`, `username`, `password`, `email`, `dob`) VALUES ('$Name','$Username','$Password','$Email','$Dob')";
+    $Join_date = date("Y/m/d");
+
+    $new_user_insert_query = "INSERT INTO `twitter_users`(`username`, `name`, `email`, `password`, `dob`, `join_date`) VALUES ('$Username','$Name','$Email','$Password','$Dob','$Join_date')";
     $new_user_insert_result = mysqli_query($conn, $new_user_insert_query);
     if ($new_user_insert_result) {
-         echo "insert success";
-    }else{
-        echo "insert failed...!";
+        $_SESSION["userid"] = $Username;
+         header("location:index.php");
     }
 }
 
@@ -24,7 +24,7 @@ if (isset($_REQUEST['newuserinsert'])) {
 if(isset($_REQUEST['mailexits'])){
     $Emaildata = trim(isset($_POST['email']) ? $_POST['email'] : "");
 
-    $emailcheck = "SELECT * FROM useraccount WHERE email = '$Emaildata'";
+    $emailcheck = "SELECT * FROM twitter_users WHERE email = '$Emaildata'";
     $resultemail = mysqli_query($conn,$emailcheck);
     if($resultemail->num_rows>0){
         echo json_encode([
@@ -41,7 +41,7 @@ if(isset($_REQUEST['mailexits'])){
 if(isset($_REQUEST['usernameexits'])){
     $usernamedata = trim(isset($_POST['username']) ? $_POST['username'] : "");
 
-    $usercheck = "SELECT * FROM useraccount WHERE username = '$usernamedata'";
+    $usercheck = "SELECT * FROM twitter_users WHERE username = '$usernamedata'";
     $resultuser = mysqli_query($conn,$usercheck);
     if($resultuser->num_rows>0){
         echo json_encode([
@@ -59,13 +59,23 @@ if (isset($_REQUEST['loginuser'])) {
     $loginData = trim(isset($_POST['userid']) ? $_POST['userid'] : "");
     $password = trim(isset($_POST['userpass']) ? $_POST['userpass'] : "");
 
+    // find username using user email
+    $findusername = "SELECT * FROM `twitter_users` WHERE email = '$loginData';";
+    $result = mysqli_query($conn,$findusername);
+    $userDAta = mysqli_fetch_assoc($result);
+    if($userDAta){
+        $username = $userDAta['username'];
+    }else{
+        $username = $loginData;
+    }
+
     // Check if loginData is email or username
-    $login_query = "SELECT * FROM useraccount WHERE (email = '$loginData' OR username = '$loginData') AND password = '$password'";
+    $login_query = "SELECT * FROM twitter_users WHERE (email = '$loginData' OR username = '$loginData') AND password = '$password'";
     $login_result = mysqli_query($conn, $login_query);
 
     if ($login_result && mysqli_num_rows($login_result) > 0) {
         $user = mysqli_fetch_assoc($login_result);
-        $_SESSION["userid"] = $loginData;
+        $_SESSION["userid"] = $username;
         echo json_encode([
             'status' => 'success',
         ]);
@@ -81,14 +91,10 @@ if (isset($_REQUEST['following_data'])) {
     ?>
         <div class="post">
             <div class="input-post">
-                <div class="profile-dp"><span>V</span></div>
+                <div class="profile-dp"><span><?php echo $_SESSION['firstchr']?></span></div>
                 <div class="happening-input">
                     <input type="text" id="post_input" name="input_post" value="" placeholder="Whats's happening?">
                 </div>
-            </div>
-            
-            <div class="everyone-reply">
-                <span><i class="fa-solid fa-earth-americas"></i><a href="#">Everyone can reply</a></span>
             </div>
 
             <div class="post-options">
@@ -104,6 +110,7 @@ if (isset($_REQUEST['following_data'])) {
             </div>
         </div>
 
+        <div class="post">Following Data show </div>
         <div class="post">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos voluptate inventore quod tenetur sit quia quibusdam. Nobis, dolorem libero, aut ea non commodi similique quaerat aperiam architecto culpa dignissimos?</div>
         <div class="post">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos voluptate inventore quod tenetur sit quia quibusdam. Nobis, dolorem libero, aut ea non commodi similique quaerat aperiam architecto culpa dignissimos?</div>
         <div class="post">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos voluptate inventore quod tenetur sit quia quibusdam. Nobis, dolorem libero, aut ea non commodi similique quaerat aperiam architecto culpa dignissimos?</div>
@@ -115,14 +122,10 @@ if (isset($_REQUEST['foryou_data'])) {
     ?>
         <div class="post">
             <div class="input-post">
-                <div class="profile-dp"><span>R</span></div>
+                <div class="profile-dp"><span><?php echo $_SESSION['firstchr']?></span></div>
                 <div class="happening-input">
                     <input type="text" id="post_input" name="input_post" value="" placeholder="Whats's happening?">
                 </div>
-            </div>
-            
-            <div class="everyone-reply">
-                <span><i class="fa-solid fa-earth-americas"></i><a href="#">Everyone can reply</a></span>
             </div>
 
             <div class="post-options">
@@ -138,6 +141,7 @@ if (isset($_REQUEST['foryou_data'])) {
             </div>
         </div>
 
+        <div class="post">For you Data show </div>
         <div class="post">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos voluptate inventore quod tenetur sit quia quibusdam. Nobis, dolorem libero, aut ea non commodi similique quaerat aperiam architecto culpa dignissimos?</div>
         <div class="post">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos voluptate inventore quod tenetur sit quia quibusdam. Nobis, dolorem libero, aut ea non commodi similique quaerat aperiam architecto culpa dignissimos?</div>
         <div class="post">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos voluptate inventore quod tenetur sit quia quibusdam. Nobis, dolorem libero, aut ea non commodi similique quaerat aperiam architecto culpa dignissimos?</div>
@@ -146,19 +150,22 @@ if (isset($_REQUEST['foryou_data'])) {
 
 // profile all pages fetch Dynamic Data using ajax request
 if (isset($_REQUEST['Profilepage'])) {
+    // fetch login userData
+    include 'login_user_data.php';
+
     $page = isset($_REQUEST['Profilepage']) ? $_REQUEST['Profilepage'] : "";
     if($page === 'Posts' || $page === 'Replies'){
         ?>
         <div class="user-post-details">
             <div class="post-information">
-                <span>R</span>
-                <p><b style="color:black;">Rajesh Kumar </b> @RajeshKuma7721 <b>33m</b></p>
+                <span><?php echo $_SESSION['firstchr']?></span>
+                <p><b style="color:black;"><?php echo $userDAta['name']?> </b> @<?php echo $_SESSION['userid']?> <b>33m</b></p>
                 <button type="button" class="post-delete" value="" style="border: none; background-color: white;"><i class="fa-solid fa-ellipsis"></i></button>
             </div>
 
             <div class="post-information">
                 <div>
-                    <p class="post-discription">Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post</p>
+                    <p class="post-discription"> Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post</p>
                 </div>
             </div>
 
@@ -227,6 +234,85 @@ if (isset($_REQUEST['Profilepage'])) {
             <img src="image/location.png" width="32.7%">
         </div>
         <?php
+    }
+}
+
+
+// user profile Update operation on ajax request
+if (isset($_REQUEST['user_update'])) {
+    $userID = trim(isset($_POST['userid']) ? $_POST['userid'] : "");
+    $Name = trim(isset($_POST['name']) ? $_POST['name'] : "");
+    $Username = trim(isset($_POST['username']) ? $_POST['username'] : "");
+    $Email = trim(isset($_POST['email']) ? $_POST['email'] : "");
+    $Dob = isset($_POST['dob']) ? $_POST['dob'] : "";
+    $Bio = trim(isset($_POST['bio']) ? $_POST['bio'] : "");
+    $profile_pic = '';
+    $profile_banner = '';
+
+    // update for profile pic
+    if(empty($_FILES['profile_pic']['name'])){
+        $profile_pic = isset($_POST['profile_picture']) ? $_POST['profile_picture'] : "";
+    }else{
+        // old profile_picture unlink after select new profile_picture
+        $imgquery = "SELECT profile_picture FROM `twitter_users` WHERE `id`=$userID";
+        $result = mysqli_query($conn, $imgquery);
+        $imgrow = mysqli_fetch_assoc($result);
+        if($imgrow){
+            $imagePath = $imgrow['profile_picture'];// find profile_picture from database 
+            $imageFullPath = 'profile_pic/' . $imagePath;
+
+            if (file_exists($imageFullPath)) { // unlink image from profile_pic folder
+                unlink($imageFullPath);
+            }
+        } // end unlink
+
+        $targetDir = 'profile_pic/';
+        if(!is_dir($targetDir))
+        {
+            $targetDir = mkdir($targetDir, 0777, true);
+        }    
+        $profile_pic = time() . '.' . pathinfo($_FILES["profile_pic"]["name"],PATHINFO_EXTENSION);
+        $targetFile = $targetDir .$profile_pic;
+        move_uploaded_file($_FILES["profile_pic"]["tmp_name"],$targetFile);
+    }
+
+
+    // update for profile banner
+    if(empty($_FILES['profile_banner']['name'])){
+        $profile_banner = isset($_POST['profile_cover']) ? $_POST['profile_cover'] : "";
+    }else{
+        // old profile_banner unlink after select new profile_banner
+        $imgquery = "SELECT cover_picture FROM `twitter_users` WHERE `id` = $userID";
+        $result = mysqli_query($conn, $imgquery);
+        $imgrow = mysqli_fetch_assoc($result);
+        if($imgrow){
+            $imagePath = $imgrow['cover_picture'];// find profile_picture from database 
+            $imageFullPath = 'profile_banner/' . $imagePath;
+
+            if (file_exists($imageFullPath)) { // unlink image from profile_banner folder
+                unlink($imageFullPath);
+            }
+        } // end unlink
+
+        $targetDir = 'profile_banner/';
+        if(!is_dir($targetDir))
+        {
+            $targetDir = mkdir($targetDir, 0777, true);
+        }    
+        $profile_banner = time() . '.' . pathinfo($_FILES["profile_banner"]["name"],PATHINFO_EXTENSION);
+        $targetFile = $targetDir .$profile_banner;
+        move_uploaded_file($_FILES["profile_banner"]["tmp_name"],$targetFile);
+    }
+
+    $sql = "UPDATE `twitter_users` SET `username`='$Username',`name`='$Name',`email`='$Email',`dob`='$Dob',
+       `bio`='$Bio',`profile_picture`='$profile_pic',`cover_picture`='$profile_banner' WHERE `id`=$userID";
+    
+    $result = mysqli_query($conn,$sql);
+    if($result){
+        $_SESSION["userid"] = $Username;
+        echo "update successfull";
+    }else{
+        echo "update failed";
     }
 }
 ?>

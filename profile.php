@@ -7,19 +7,33 @@ if(isset($_SESSION["userid"])){ ?>
     // include file of head section items 
     include 'layout/header.php';
     ?>
-    <link rel="stylesheet" href="editstyle.css">
     <title>Profile/ X</title>
+    <style>
+        .form-group{
+            margin-bottom: 0px;
+        }
+        .form-group label{
+            margin-bottom: -7px;
+        }
+
+        .form-group input{
+            height: 30px;
+        }
+    </style>
 </head>
 <body>
     <div class="pagecontainer">
-    <?php
+        <?php
         // include file of left-sidebar 
         include 'layout/left-sidebar.php';
+
+        // fetch login userData
+        include 'login_user_data.php';
         ?>
 
         <div class="center-main" style="margin: 0 497px 0 280px;">
             <div class="profile-center-header">
-                <div class="profile-head"><span id="">Rajesh Kumar <br> <span class="profile-post-all-count">0 posts</span></span></div>
+                <div class="profile-head"><span id=""><?php echo $userDAta['name']?> <br> <span class="profile-post-all-count">0 posts</span></span></div>
 
                 <div class="search-box" style="margin-left: 670px;">
                   <input type="text" placeholder="🔍︎ Search" id="search">
@@ -34,12 +48,13 @@ if(isset($_SESSION["userid"])){ ?>
                 </div>
                 <div class="post" id="profile-dp-show">
                     <!-- <img src="image/dp.jpg" id="profile-dp-show" alt=""> -->
-                    <span>R</span>
+                    <span><?php echo $_SESSION['firstchr']?></span>
                      <button id="edit-profile-btn">Edit profile</button>
                      <div class="user-profile-info">
-                        <h3>Rajesh Kumar</h3>
-                        <p>@RajeshKuma7721</p>
-                        <p><i class="fa-solid fa-calendar-days"></i> Joined April 2025</p>
+                        <h3><?php echo $userDAta['name']?></h3>
+                        <p>@<?php echo $userDAta['username'];?></p>
+                        <p><i class="fa-solid fa-calendar-days"></i> <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?></p>
+                        <p><?php echo $userDAta['bio'];?></p>
                         <p><b>3</b> Following&nbsp&nbsp <b>1</b> Followers</p>
                      </div>
                 </div>
@@ -72,7 +87,7 @@ if(isset($_SESSION["userid"])){ ?>
                     <div class="might-follow-users">
                         <a href="">Follow</a>
                     </div>
-                </div>              
+                </div>            
             </div>
 
             <?php
@@ -82,37 +97,79 @@ if(isset($_SESSION["userid"])){ ?>
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
-    <div id="edit-profile-modal" class="modal-overlay">
-    <div class="edit-profile-modal-content">
-        <span class="close-modal" id="close-edit-profile">&times;</span>
-        <h2>Edit profile</h2>
 
-        <form id="edit-profile-form">
-        <div class="edit-profile-imgs">
-            <div class="cover-upload">
-            <!-- <img src="image/bg_cover.jpg" alt="Cover" class="cover-img-preview" /> in label -->
-            <label for="cover-photo"></label>
-            <input type="file" id="cover-photo" hidden />
-            </div>
+    <div id="edit-profile-modal" class="edit-modal-overlay">
+        <div class="edit-profile-modal-content">
+            <form id="edit-user-data" enctype="multipart/form-data" method="post">
+                <div class="edit-header">
+                    <p id="show-msg"></p>
+                    <h2>Edit profile</h2>
+                    <button type="submit" class="edit-save-btn">Save</button>
+                    <a class="close-edit-form">Close</a>
+                </div>
+        
+                <!-- for user profile_banner -->
+                <?php
+                if(empty($userDAta['cover_picture'])){ ?>
+                    <div class="banner" onclick="document.getElementById('banner-upload').click();">
+                        <span class="icon">+</span>
+                        <input type="file" name="profile_banner" id="banner-upload">
+                    </div>
+                <?php }else{?>
+                    <div class="banner" onclick="document.getElementById('banner-upload').click();">
+                        <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
+                        <i class="icon" style="color: black;">+</i>
+                        <input type="file" name="profile_banner" id="banner-upload">
+                        <input type="hidden" name="profile_cover" value="<?php echo $userDAta['cover_picture']; ?>">
+                    </div>
+                <?php }
 
-            <div class="dp-upload">
-            <!-- <span class="dp-circle">R</span> in label -->
-            <label for="dp-photo"></label>
-            <input type="file" id="dp-photo" hidden />
-            </div>
+                // for user profile_picture
+                if(empty($userDAta['profile_picture'])){ ?>
+                    <div class="profile-pic" onclick="document.getElementById('profile-upload').click();">
+                        <span class="icon">R</span>
+                        <i class="icon" style="color: black;">+</i>
+                        <input type="file" name="profile_pic" id="profile-upload">
+                    </div>
+                <?php }else{?>
+                    <div id="dp-pic" class="profile-pic" onclick="document.getElementById('profile-upload').click();">
+                        <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="icon" alt="No-dp" width="80">
+                        <i class="icon" style="color: black;">+</i>
+                        <input type="file" name="profile_pic" id="profile-upload">
+                        <input type="hidden" name="profile_picture" value="<?php echo $userDAta['profile_picture']; ?>">
+                    </div>
+                <?php }
+                ?>
+
+                <div class="form-group">
+                    <label>Name: </label>
+                    <input type="hidden" name="userid" value="<?php echo $userDAta['id']?>">
+                    <input type="text" name="name" value="<?php echo $userDAta['name']?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Username: </label>
+                    <input type="text" name="username" value="<?php echo $userDAta['username']?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Email: </label>
+                    <input type="text" name="email" value="<?php echo $userDAta['email']?>">
+                </div>
+
+                <div class="form-group">
+                    <label>DOB: </label>
+                    <input type="date" name="dob" value="<?php echo $userDAta['dob']?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea id="bio" name="bio" maxlength="160" rows="3" oninput="updateCharCount()"><?php echo $userDAta['bio']?></textarea>
+                    <div class="char-count" id="charCount"></div>
+                </div>
+            </form> 
         </div>
-
-        <input type="text" placeholder="Name" maxlength="50" />
-        <textarea placeholder="Bio (max 160 characters)" maxlength="160"></textarea>
-        <input type="text" placeholder="Location" maxlength="100" />
-        <input type="text" placeholder="Website" maxlength="100" />
-        <button type="submit">Save</button>
-        </form>
     </div>
-    </div>
-
-
 </body>
 <script>
     $(document).ready(function () {
@@ -174,22 +231,13 @@ if(isset($_SESSION["userid"])){ ?>
             var LikesID = $(this).attr("id");
             profilepageData(LikesID);
         });
+    });
 
-        $("#edit-profile-btn").click(function(){
-            $("#edit-profile-modal").fadeIn();
-        });
-
-        $("#close-edit-profile").click(function(){
-            $("#edit-profile-modal").fadeOut();
-        });
-
-        // Disable outside click
-        $(document).on('click', function(event) {
-            if (!$(event.target).closest(".edit-profile-modal-content, #edit-profile-btn").length) {
-            event.stopPropagation();
-            }
-        });
-});
+    function updateCharCount() {
+        const bio = document.getElementById('bio');
+        const count = document.getElementById('charCount');
+        count.textContent = `${bio.value.length} / 160`;
+    }
 </script>
 </html>
 <?php }else{

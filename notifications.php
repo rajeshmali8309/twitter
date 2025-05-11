@@ -56,6 +56,7 @@ if(isset($_SESSION["userid"])){ ?>
     </div>
 </body>
 <script>
+    $(".trending-section").css({"margin-top":"64px"});
     $(document).ready(function () {
         $("#notification").addClass("sidebar-activepage");
     });

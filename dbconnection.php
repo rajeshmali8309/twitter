@@ -2,7 +2,7 @@
 $server = 'localhost';
 $username = 'root';
 $password = '';
-$dbName = 'projectx';
+$dbName = 'twitter_clone';
 
 $conn = new mysqli($server,$username,$password,$dbName);
 

@@ -1,7 +1,7 @@
 <div class="trending-section">
     <h3>What's happening</h3>
     <img src="image\live-img.jpg" class="heppening-img">
-    <div style="display: inline; margin-right:;">
+    <div style="display: inline;">
         <span class="img-p">From the Desk of Anthony Pompliano</span>
     </div>
     <span style="font-size: 16px;">LIVE</span>

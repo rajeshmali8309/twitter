@@ -388,7 +388,7 @@ $(document).ready(function () {
         });
     });
 
-    // Use event delegation
+    // delete post event
     $(document).on("click", ".post-delete", function() {
         $(".profile-post-popup").fadeToggle();
     });
@@ -396,4 +396,38 @@ $(document).ready(function () {
     $(document).on("click", ".close-post-dlt", function() {
         $(".profile-post-popup").fadeOut();
     });
+
+    // edit profile form open close
+    $("#edit-profile-btn").click(function(){
+        $("#edit-user-data")[0].reset();
+        $("#edit-profile-modal").fadeIn();
+    });
+
+    $(".close-edit-form").click(function(){
+        $("#edit-user-data")[0].reset();
+        $("#edit-profile-modal").fadeOut();
+    });
+
+    // start Insert Data using ajax request
+    $("#edit-user-data").submit(function(event){
+        event.preventDefault();
+        userDataUpdate();
+    });
+
+    function userDataUpdate(){
+        var form = $('#edit-user-data')[0];
+        var formData = new FormData(form);
+        formData.append('user_update', 'formData');
+        $.ajax({
+            url: "controller.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(insertreturn){
+                $("#show-msg").html(insertreturn);
+                // $('#userForm').fadeOut();
+            }
+        });
+    }
 });

@@ -1,3 +1,7 @@
+<?php
+// fetch login userData
+include 'login_user_data.php';
+?>
 <div class="sidebar">
     <div class="index-logo">
         <img src="image\logo.svg" alt="No logo">
@@ -14,16 +18,16 @@
         <button class="post-btn">Post</button>
     </div>
     <div class="user-profile">
-        <div class="avatar">R</div>
+        <div class="avatar"><?php echo $_SESSION['firstchr']?></div>
         <div>
-            <div style="color:black; font-size: 18px;"><strong>Rajesh Kumar</strong></div>
-            <div style="color: rgb(95, 94, 94);; font-size: 15px;">@RajeshKuma7721</div>
+            <div style="color:black; font-size: 18px;"><strong><?php echo $userDAta['name']?></strong></div>
+            <div style="color: rgb(95, 94, 94);; font-size: 15px;">@<?php if(isset($_SESSION['userid'])){ echo $_SESSION['userid']; }?></div>
         </div>
         <span style=""><a><i class="fa-solid fa-ellipsis"></i></a></span>
     </div>
 
     <div class="logout-section">
         <a href="#">Add an existing account</a>
-        <a onclick="return confirm('Log out of X?');" href="logout.php">Log out @Rajeshmali28276</a>
+        <a onclick="return confirm('Log out of X?');" href="logout.php">Log out @<?php if(isset($_SESSION['userid'])){ echo $_SESSION['userid']; }?></a>
     </div>
 </div>
