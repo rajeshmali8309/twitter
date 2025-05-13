@@ -164,51 +164,103 @@ if (isset($_REQUEST['foryou_data'])) {
 
 // profile all pages fetch Dynamic Data using ajax request
 if (isset($_REQUEST['Profilepage'])) {
+    $page = isset($_REQUEST['Profilepage']) ? $_REQUEST['Profilepage'] : "";
     // fetch login userData
     include 'login_user_data.php';
 
-    $page = isset($_REQUEST['Profilepage']) ? $_REQUEST['Profilepage'] : "";
     if($page === 'Posts' || $page === 'Replies'){
-        ?>
-        <div class="user-post-details">
-            <div class="post-information">
-                <?php if(empty($userDAta['profile_picture'])){ ?>
-                    <span><?php echo $_SESSION['firstchr']?></span>
-                <?php }else{
-                    ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" alt="no file"><?php
-                }?>
-                <p><b style="color:black;"><?php echo $userDAta['name']?> </b> @<?php echo $_SESSION['userid']?> <b>33m</b></p>
-                <button type="button" class="post-delete" value="" style="border: none; background-color: white;"><i class="fa-solid fa-ellipsis"></i></button>
-            </div>
+        //fetch user Post for profile page
+        $post_fetch_user = "SELECT * FROM `twitter_posts` WHERE `user_id` = $userDAta[id] ORDER BY `id` DESC";
+        $result = mysqli_query($conn, $post_fetch_user);
 
-            <div class="post-information">
-                <div>
-                    <p class="post-discription"> Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post Rajesh mali new post</p>
+        if ($result->num_rows > 0) {
+            while($post = $result->fetch_assoc()) {
+                date_default_timezone_set("Asia/Kolkata");
+                $postTime = new DateTime($post['created_at']);
+                $currentTime = new DateTime();
+
+                $interval = $currentTime->diff($postTime);
+                $years = $interval->y;
+                $months = $interval->m;
+                $weeks = floor($interval->d / 7);
+                $days = $interval->d % 7;
+                $hours = $interval->h;
+                $minutes = $interval->i;
+
+                if ($years > 0) {
+                    $output = $years . ' Y';
+                }
+                
+                elseif ($months > 0) {
+                    $output = $months . 'M';
+                }
+
+                elseif ($weeks > 0) {
+                    $output = $weeks . 'W';
+                }
+
+                elseif ($days > 0) {
+                    $output = $days . 'd';
+                }
+
+                elseif ($hours > 0) {
+                    $output = $hours . 'h';
+                }
+
+                elseif ($minutes > 0) {
+                    $output = $minutes . 'm';
+                }else{
+                $output = ' Just now';
+                }
+                ?>
+                <div class="user-post-details">
+                    <div class="post-information">
+                        <?php if(empty($userDAta['profile_picture'])){ ?>
+                            <span><?php echo $_SESSION['firstchr']?></span>
+                        <?php }else{
+                            ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" alt="no file"><?php
+                        }?>
+                        <p><b style="color:black;"><?php echo $userDAta['name']?> </b> @<?php echo $_SESSION['userid']?> <b class="user-post-time"><?php echo $output; ?></b></p>
+                        <button type="button" class="post-delete" value="" style="border: none; background-color: white;"><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
+
+                    <div class="post-information">
+                        <div>
+                            <p class="post-discription"><?php echo $post['description']; ?></p>
+                        </div>
+                    </div>
+
+                    <?php 
+                    if(!empty($post['post_file'])){ ?>
+                        <div class="post-img">
+                            <img src="posts/<?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
+                        </div>
+                        <!-- <div class="post-img">
+                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
+                                <source src="posts/ echo $post['post_file'];?>" type="video/mp4">
+                            </video>
+                        </div> -->
+                    <?php }
+                    ?>
+
+                    <div class="post-reactions">
+                        <a class="comment-post"><i class="fa-regular fa-comment"> <span>2</span></i></a>
+                        <a class="like-post"><i class="fa-regular fa-heart"> <span>2</span></i></a>
+                    </div>
+
+                    <div class="profile-post-popup">
+                        <p><span class="close-post-dlt"><i class="fa-solid fa-xmark"></span></i></p>
+                        <a style="color:red;"> <img src="image/delete_icon.png" width="15"> Delete</a>
+                        <a class="post-none-actions">Edit</a>
+                        <a class="post-none-actions">Pin to your profile</a>
+                        <a class="post-none-actions">Highlights on your profile</a>
+                        <a class="post-none-actions">Save</a>
+                        <a class="post-none-actions">Share</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="post-img">
-                <img src="image/united-states.png" alt="No post file" width="100%" height="600px">
-            </div>
-
-            <div class="post-reactions">
-                <a class="comment-post"><i class="fa-regular fa-comment"></i></a>
-                <a class="like-post"><i class="fa-regular fa-heart"></i></a>
-                <a><i class="fa-solid fa-repeat"></i></a>
-                <a><i class="fa-solid fa-chart-simple"></i></a>
-            </div>
-
-            <div class="profile-post-popup">
-                <p><span class="close-post-dlt"><i class="fa-solid fa-xmark"></span></i></p>
-                <a style="color:red;"> <img src="image/delete_icon.png" width="15"> Delete</a>
-                <a class="post-none-actions">Edit</a>
-                <a class="post-none-actions">Pin to your profile</a>
-                <a class="post-none-actions">Highlights on your profile</a>
-                <a class="post-none-actions">Save</a>
-                <a class="post-none-actions">Share</a>
-            </div>
-        </div>
-        <?php    
+                <?php
+            }
+        }    
     }
 
     // for highlight
@@ -429,13 +481,13 @@ if (isset($_REQUEST['profile_page_record'])){
                 if(empty($userDAta['cover_picture'])){ ?>
                     <div class="banner" onclick="document.getElementById('banner-upload').click();">
                         <span class="icon">+</span>
-                        <input type="file" name="profile_banner" id="banner-upload">
+                        <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                     </div>
                 <?php }else{?>
                     <div class="banner" onclick="document.getElementById('banner-upload').click();">
                         <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
                         <i class="icon" style="color: black;">+</i>
-                        <input type="file" name="profile_banner" id="banner-upload">
+                        <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                         <input type="hidden" name="profile_cover" value="<?php echo $userDAta['cover_picture']; ?>">
                     </div>
                 <?php }
@@ -445,13 +497,13 @@ if (isset($_REQUEST['profile_page_record'])){
                     <div class="profile-pic" onclick="document.getElementById('profile-upload').click();">
                         <span class="icon">R</span>
                         <i class="icon" style="color: black;">+</i>
-                        <input type="file" name="profile_pic" id="profile-upload">
+                        <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                     </div>
                 <?php }else{?>
                     <div id="dp-pic" class="profile-pic" onclick="document.getElementById('profile-upload').click();">
                         <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="icon" alt="No-dp" width="80">
                         <i class="icon" style="color: black;">+</i>
-                        <input type="file" name="profile_pic" id="profile-upload">
+                        <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                         <input type="hidden" name="profile_picture" value="<?php echo $userDAta['profile_picture']; ?>">
                     </div>
                 <?php }
@@ -483,9 +535,33 @@ if (isset($_REQUEST['profile_page_record'])){
                     <textarea id="bio" name="bio" maxlength="160" rows="3" oninput="updateCharCount()"><?php echo $userDAta['bio']?></textarea>
                     <div class="char-count" id="charCount"></div>
                 </div>
-            </form> 
+            </form>
         </div>
     </div>
     <?php
+}
+
+// Post insert operation on ajax request
+if (isset($_REQUEST['user_post_insert'])) {
+    $user_id = trim(isset($_POST['user_id']) ? $_POST['user_id'] : "");
+    $Description = trim(isset($_POST['post_description']) ? $_POST['post_description'] : "");
+    $PostFile = '';
+
+    // for post file
+    if(!empty($_FILES['post_file']['name'])){
+        $targetDir = 'posts/';
+        $PostFile = time() . '.' . pathinfo($_FILES["post_file"]["name"],PATHINFO_EXTENSION);
+        $targetFile = $targetDir .$PostFile;
+        move_uploaded_file($_FILES["post_file"]["tmp_name"],$targetFile);
+    }
+
+    $sql = "INSERT INTO `twitter_posts`(`user_id`, `post_file`, `description`) VALUES ('$user_id','$PostFile','$Description')";
+    $result = mysqli_query($conn,$sql);
+
+    if($result){
+        echo "Post SuccessFully...!";
+    }else{ 
+        echo "Post Failed...!";
+    }
 }
 ?>

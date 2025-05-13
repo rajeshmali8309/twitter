@@ -1109,7 +1109,7 @@
 .post-information i{
     font-size: 18px;
     color: black;
-    margin-left: 220px;
+    margin-left: 150px;
     padding: 5px;
     border-radius: 50%;
 }
@@ -1148,8 +1148,14 @@
 .post-reactions a{
     font-size: 20px;
     color: black;
-    margin-left: 100px;
+    margin-left: 165px;
     cursor: pointer;
+}
+
+.post-reactions span{
+    font-size: 17px;
+    color: black;
+    font-weight: 400;
 }
 
 .profile-post-popup{
@@ -1470,41 +1476,38 @@
     position: absolute;
     top: 7px;
     right: 15px;
-    font-size: 22px;
+    font-size: 30px;
     cursor: pointer;
 }
 
-.post-modal-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+.close-post-modal:hover{
+    color: rgb(114, 113, 113);
 }
 
-.modal-profile-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+#left-post-btn{
+    padding: 10px 28px;
+    margin-left: 90px;
 }
 
-.post-textarea {
-    width: 100%;
-    resize: none;
-    border: none;
-    outline: none;
+#left-post-btn:hover{
+    background-color: rgb(37, 37, 37);
+}
+
+/* .disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+} */
+
+.success-msg{
+    color: green;
+}
+
+.user-post-time{
     font-size: 18px;
-    background: none;
+    color: rgb(65, 61, 61);
 }
 
-.post-modal-footer {
-    text-align: right;
-    margin-top: 10px;
-}
-
-.submit-post {
-    background-color: #1d9bf0;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 25px;
-    cursor: pointer;
+#charCountpost{
+    margin-top: 20px;
+    margin-left: 30px;
 }

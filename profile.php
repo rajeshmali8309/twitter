@@ -30,7 +30,6 @@ if(isset($_SESSION["userid"])){ ?>
 <script>
     
     function profilepage(){
-        console.log("continue");
         var profilepage = "userprofile";
         $.ajax({
             url: "controller.php",
@@ -41,6 +40,7 @@ if(isset($_SESSION["userid"])){ ?>
             success : function(response){
                 $("#show-user-profile").html(response);
                 $("#profile").addClass("sidebar-activepage");
+                $("#Posts").trigger("click");
             }
         });
     }
@@ -51,16 +51,9 @@ if(isset($_SESSION["userid"])){ ?>
         // start profile page fetch Data using ajax
 
         function profilepageData(getId) {
-            console.log("contiijh");
-            $("#Posts").removeClass("profile-links-active");
-            $("#Replies").removeClass("profile-links-active");
-            $("#Highlights").removeClass("profile-links-active");
-            $("#Articles").removeClass("profile-links-active");
-            $("#Media").removeClass("profile-links-active");
-            $("#Likes").removeClass("profile-links-active");
+            $("#Posts,#Replies,#Highlights,#Articles,#Media,#Likes").removeClass("profile-links-active");
             if(!getId== ''){
                 $("#"+getId).addClass("profile-links-active");
-
                 $.ajax({
                     url: "controller.php",
                     type: 'post',

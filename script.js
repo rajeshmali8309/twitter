@@ -344,7 +344,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".user-profile").click(function(){
+    $(document).on("click", ".user-profile", function(){
         $(".logout-section").fadeToggle();
     });
 
@@ -426,17 +426,65 @@ $(document).ready(function () {
             processData: false,
             success: function(insertreturn){
                 $('#edit-profile-modal').fadeOut();
-                profilepageData();
+                profilepage();
             }
         });
     }
 
     // Open post-btn model 
     $(document).on("click", ".post-btn", function () {
+        $(".left-post-form")[0].reset();
+        $(".left-post-discription").text("");
         $("#post-modal-overlay").fadeIn(300);
     });
 
     $(document).on("click", ".close-post-modal", function () {
+        $(".left-post-form")[0].reset();
         $("#post-modal-overlay").fadeOut(300);
     });
+
+    // Post validation & Post Insert...
+    $(".left-post-form").submit(function (event) {
+        event.preventDefault();
+        var isValid = true;
+
+        if($(".left-post-discription").val() === '' && $(".left-post-file").val() === ''){
+            $("#errorPost").text("Your Post is Empty...!");
+            $("#errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+            isValid = false;
+        }else{
+            $("#errorPost").text("");
+        }
+
+        if (isValid) {
+            var form = $('.left-post-form')[0];
+            var formData = new FormData(form);
+            formData.append('user_post_insert', 'formData');
+            $.ajax({
+                url: "controller.php",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(insertpost){
+                   setTimeout(function() {
+                        $('.success-msg').html(insertpost);
+                    }, 300);
+                    
+                    setTimeout(function() {
+                        $('.success-msg').html("");
+                        $(".left-post-form")[0].reset();
+                        $("#post-modal-overlay").fadeOut(300);
+                        profilepage();
+                    }, 1500);
+                }
+            });
+        }
+    });
 });
+
+    function postCharCount() {
+        const posttext = document.getElementById('post_description_left');
+        const count = document.getElementById('charCountpost');
+        count.textContent = `${posttext.value.length} / 240`;
+    }
