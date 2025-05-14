@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2025 at 03:47 PM
+-- Generation Time: May 14, 2025 at 04:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -31,10 +31,30 @@ CREATE TABLE `twitters_post_likes` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `post_id` int(11) DEFAULT NULL,
-  `post_likes` int(11) DEFAULT NULL,
+  `likeable_type` enum('post','comment','reply') DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `twitters_post_likes`
+--
+
+INSERT INTO `twitters_post_likes` (`id`, `user_id`, `post_id`, `likeable_type`, `created_at`, `updated_at`) VALUES
+(190, 4, 29, 'post', '2025-05-14 11:11:38', '2025-05-14 11:11:38'),
+(203, 2, 25, 'post', '2025-05-14 12:00:28', '2025-05-14 12:00:28'),
+(204, 2, 24, 'post', '2025-05-14 12:00:29', '2025-05-14 12:00:29'),
+(205, 2, 11, 'post', '2025-05-14 12:00:59', '2025-05-14 12:00:59'),
+(206, 2, 12, 'post', '2025-05-14 12:01:01', '2025-05-14 12:01:01'),
+(207, 2, 14, 'post', '2025-05-14 12:01:03', '2025-05-14 12:01:03'),
+(208, 2, 17, 'post', '2025-05-14 12:01:06', '2025-05-14 12:01:06'),
+(210, 3, 28, 'post', '2025-05-14 12:05:44', '2025-05-14 12:05:44'),
+(212, 4, 28, 'post', '2025-05-14 12:12:04', '2025-05-14 12:12:04'),
+(213, 4, 27, 'post', '2025-05-14 12:12:19', '2025-05-14 12:12:19'),
+(214, 4, 26, 'post', '2025-05-14 12:12:34', '2025-05-14 12:12:34'),
+(220, 2, 27, 'post', '2025-05-14 12:18:15', '2025-05-14 12:18:15'),
+(221, 2, 26, 'post', '2025-05-14 12:18:17', '2025-05-14 12:18:17'),
+(231, 2, 28, 'post', '2025-05-14 12:38:41', '2025-05-14 12:38:41');
 
 -- --------------------------------------------------------
 
@@ -100,7 +120,15 @@ INSERT INTO `twitter_posts` (`id`, `user_id`, `post_file`, `description`, `creat
 (19, 2, '', 'new Post', '2025-05-13 11:53:00', '2025-05-13 11:53:00'),
 (20, 3, '1747139239.png', 'First Post', '2025-05-13 12:27:19', '2025-05-13 12:27:19'),
 (21, 3, '', 'second post', '2025-05-13 12:27:48', '2025-05-13 12:27:48'),
-(22, 2, '', 'post 5', '2025-05-13 12:47:47', '2025-05-13 12:47:47');
+(22, 2, '', 'post 5', '2025-05-13 12:47:47', '2025-05-13 12:47:47'),
+(23, 2, '', 'checkout', '2025-05-13 13:52:03', '2025-05-13 13:52:03'),
+(24, 2, '', 'this is my post', '2025-05-13 13:53:30', '2025-05-13 13:53:30'),
+(25, 2, '', 'this is home page post', '2025-05-13 13:54:15', '2025-05-13 13:54:15'),
+(26, 2, '1747144498.jpg', 'this is noptification post', '2025-05-13 13:54:58', '2025-05-13 13:54:58'),
+(27, 2, '1747144566.jpg', 'this is a last post', '2025-05-13 13:56:06', '2025-05-13 13:56:06'),
+(28, 2, '', 'Good Morning', '2025-05-14 05:36:58', '2025-05-14 05:36:58'),
+(29, 4, '', 'first post by @suresh_0000', '2025-05-14 11:09:31', '2025-05-14 11:09:31'),
+(31, 4, '', 'good after noon', '2025-05-14 11:13:20', '2025-05-14 11:13:20');
 
 -- --------------------------------------------------------
 
@@ -173,7 +201,8 @@ CREATE TABLE `twitter_users` (
 
 INSERT INTO `twitter_users` (`id`, `username`, `name`, `email`, `password`, `dob`, `bio`, `join_date`, `profile_picture`, `cover_picture`, `created_at`, `updated_at`) VALUES
 (2, 'mahesh_0909', 'Mahesh kumar', 'mahesh67003@gmail.com', 'mahesh0000', '2025-05-08', 'mr mahesh solanki', '2025-05-11', '1747136094.jpg', '1746976781.jpg', '2025-05-11 09:43:01', '2025-05-13 11:55:22'),
-(3, '__rajeshmali09', 'Rajesh Mali', 'rajeshk67003@gmail.com', 'rajesh0000', '2002-07-18', 'web developer', '2025-05-13', '1747139116.jpg', '1747139116.jpg', '2025-05-13 12:24:23', '2025-05-13 12:26:20');
+(3, '__rajeshmali09', 'Rajesh Mali', 'rajeshk67003@gmail.com', 'rajesh0000', '2002-07-18', 'web developer', '2025-05-13', '1747139116.jpg', '1747139116.jpg', '2025-05-13 12:24:23', '2025-05-13 12:26:20'),
+(4, 'suresh_0000', 'Suresh Kumar', 'sureshmali0000@gmail.com', 'suresh0000', '2000-07-17', 'mr suresh Kumar mali', '2025-05-14', '1747220918.jpg', '1747220210.jpg', '2025-05-14 10:53:14', '2025-05-14 11:08:38');
 
 --
 -- Indexes for dumped tables
@@ -250,7 +279,7 @@ ALTER TABLE `twitter_users`
 -- AUTO_INCREMENT for table `twitters_post_likes`
 --
 ALTER TABLE `twitters_post_likes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
 
 --
 -- AUTO_INCREMENT for table `twitter_followers`
@@ -268,7 +297,7 @@ ALTER TABLE `twitter_notification`
 -- AUTO_INCREMENT for table `twitter_posts`
 --
 ALTER TABLE `twitter_posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `twitter_post_comments`
@@ -292,7 +321,7 @@ ALTER TABLE `twitter_post_comment_likes`
 -- AUTO_INCREMENT for table `twitter_users`
 --
 ALTER TABLE `twitter_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

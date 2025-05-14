@@ -18,14 +18,29 @@ if(isset($_SESSION["userid"])){ ?>
         .form-group input{
             height: 30px;
         }
+
+        .text-pink{
+            color: rgb(231, 14, 50);
+        }
+        .post-reactions a{
+            text-decoration: none;
+        }
+
     </style>
 </head>
 <body>
     <!-- user profile data show using ajax request -->
+    <?php 
+    function userLiked($conn, $userId, $postId) {
+            $userLiked_query = mysqli_query($conn, "SELECT * FROM twitters_post_likes WHERE user_id = $userId AND post_id = $postId");
+            return mysqli_num_rows($userLiked_query) > 0;
+        }
+    ?>
     <div class="pagecontainer" id="show-user-profile">
     </div>
 
-    <?php include 'layout/post_model.php'; ?>
+    <?php include 'layout/post_model.php';
+    ?>
 </body>
 <script>
     

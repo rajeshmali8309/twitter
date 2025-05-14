@@ -1,7 +1,7 @@
 <div class="post-reactions">
-    <a href="#" class="like-post" data-post-id="<?= $post['id']; ?>">
-        <i class="fa-heart <?= userLiked($conn, $_SESSION['userid'], $post['id']) ? 'fa-solid text-pink' : 'fa-regular'; ?>"></i>
-        <span class="like-count"><?= getLikeCount($conn, $post['id']); ?></span>
+     <a href="#" class="like-post" data-post-id="<?= $post['id']; ?>">
+     <i class="fa-heart <?= userLiked($conn, $_SESSION['userid'], $post['id']) ? 'fa-solid text-pink' : 'fa-regular'; ?>"></i>
+    <span class="like-count"><?= getLikeCount($conn, $post['id']); ?></span>
     </a>
 </div>
 

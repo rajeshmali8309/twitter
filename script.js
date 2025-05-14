@@ -288,6 +288,7 @@ $(document).ready(function () {
         if ($(this).val() === '') {
             $("#error-id").text("");
         }
+        $("#invalid-user").text("");
     });
     $("#loginpassword").blur(function () {
         if ($(this).val() === '') {
@@ -298,6 +299,7 @@ $(document).ready(function () {
         if ($(this).val() === '') {
             $("#error-pass").text("");
         }
+        $("#invalid-user").text("");
     });
 
     // login request
@@ -388,14 +390,27 @@ $(document).ready(function () {
         });
     });
 
+    let post_delete_id = null;
+
     // delete post event
-    $(document).on("click", ".post-delete", function() {
-        $(".profile-post-popup").fadeToggle();
+    $(document).on("click", ".post-delete", function () {
+        $(".profile-post-popup").fadeIn();
+        post_delete_id = $(this).data("post-id");
     });
 
-    $(document).on("click", ".close-post-dlt", function() {
+    $(document).on("click", ".close-post-dlt", function () {
         $(".profile-post-popup").fadeOut();
     });
+
+    // Delete post click (pass post ID)
+    $(document).on("click", ".delete-post-btn", function () {
+        console.log("Post ID to delete:", post_delete_id);
+
+        // AJAX delete logic yahan lagao
+        // $.ajax({...});
+    });
+
+
 
     // edit profile form open close
     $(document).on("click", "#edit-profile-btn", function() {
@@ -440,6 +455,7 @@ $(document).ready(function () {
 
     $(document).on("click", ".close-post-modal", function () {
         $(".left-post-form")[0].reset();
+        $("#charCountpost").text("");
         $("#post-modal-overlay").fadeOut(300);
     });
 
@@ -474,12 +490,47 @@ $(document).ready(function () {
                     setTimeout(function() {
                         $('.success-msg').html("");
                         $(".left-post-form")[0].reset();
+                        $("#charCountpost").text("");
                         $("#post-modal-overlay").fadeOut(300);
                         profilepage();
                     }, 1500);
                 }
             });
         }
+    });
+
+    $(document).on('click', '.like-post', function(e){
+        e.preventDefault();
+        let postId = $(this).data('post-id'); // post id
+        let likeBtn = $(this); // like button
+
+        $.ajax({
+            url: 'controller.php',
+            method: 'POST',
+            data: {
+                "post_like_insert": postId,
+                "post_id": postId
+            },
+            success: function(result){
+                let response = JSON.parse(result);
+
+                // Like count update
+                if(response.like_count == 0){
+                    likeBtn.find('.like-count').text("");
+                }else{
+                    likeBtn.find('.like-count').text(response.like_count);
+                }
+
+                // Icon change like/unlike
+                let icon = likeBtn.find('i');
+                if(response.liked){
+                    icon.removeClass('fa-regular fa-heart').addClass('fa-solid text-pink fa-heart');
+                }else{
+                    icon.removeClass('fa-solid text-pink fa-heart').addClass('fa-regular fa-heart');
+                }
+                $(".text-pink").css({"color":"rgb(231, 14, 50);"});
+            }
+        });
     });
 });
 

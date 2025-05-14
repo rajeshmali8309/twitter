@@ -1158,16 +1158,18 @@
     font-weight: 400;
 }
 
-.profile-post-popup{
+.profile-post-popup {
     display: none;
+    position: fixed;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 9999;
     border-radius: 10px;
-    background-color: rgb(255, 254, 254);
-    padding: 5px;
-    position: absolute;
-    margin-right: 10px;
-    top: 7%;
-    right: 20px;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    width: 300px;
 }
 
 .user-post-details{
@@ -1179,12 +1181,13 @@
     background-color: white;
     font-size: 16px;
     font-weight: 700;
-    padding: 3px;
-    margin: 5px;
+    margin: 2px;
+    margin-top: 6px;
     color: black;
     text-decoration: none;
     display: block;
 }
+
 .profile-post-popup a:hover{
     border: none;
     background-color: rgb(233, 232, 232);
@@ -1192,18 +1195,19 @@
     text-decoration: none;
 }
 
-.post-none-actions{
-    opacity: 0.5;
+.post-delete{
+    background-color: white;
+    border: none;
 }
 
-.post-none-actions:hover{
-    opacity: 0.5;
-    background-color: white !important;
-    color: black;
-}
-
-.close-post-dlt{
+.close-post-dlt {
+    float: right;
     cursor: pointer;
+    font-size: 20px;
+}
+
+.close-post-dlt:hover{
+    color: black;
 }
 
 .profile-post-popup p i{
