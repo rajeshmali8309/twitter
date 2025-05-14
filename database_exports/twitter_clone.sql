@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2025 at 04:03 PM
+-- Generation Time: May 14, 2025 at 09:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -42,19 +42,18 @@ CREATE TABLE `twitters_post_likes` (
 
 INSERT INTO `twitters_post_likes` (`id`, `user_id`, `post_id`, `likeable_type`, `created_at`, `updated_at`) VALUES
 (190, 4, 29, 'post', '2025-05-14 11:11:38', '2025-05-14 11:11:38'),
-(203, 2, 25, 'post', '2025-05-14 12:00:28', '2025-05-14 12:00:28'),
-(204, 2, 24, 'post', '2025-05-14 12:00:29', '2025-05-14 12:00:29'),
 (205, 2, 11, 'post', '2025-05-14 12:00:59', '2025-05-14 12:00:59'),
 (206, 2, 12, 'post', '2025-05-14 12:01:01', '2025-05-14 12:01:01'),
-(207, 2, 14, 'post', '2025-05-14 12:01:03', '2025-05-14 12:01:03'),
-(208, 2, 17, 'post', '2025-05-14 12:01:06', '2025-05-14 12:01:06'),
 (210, 3, 28, 'post', '2025-05-14 12:05:44', '2025-05-14 12:05:44'),
 (212, 4, 28, 'post', '2025-05-14 12:12:04', '2025-05-14 12:12:04'),
 (213, 4, 27, 'post', '2025-05-14 12:12:19', '2025-05-14 12:12:19'),
 (214, 4, 26, 'post', '2025-05-14 12:12:34', '2025-05-14 12:12:34'),
-(220, 2, 27, 'post', '2025-05-14 12:18:15', '2025-05-14 12:18:15'),
-(221, 2, 26, 'post', '2025-05-14 12:18:17', '2025-05-14 12:18:17'),
-(231, 2, 28, 'post', '2025-05-14 12:38:41', '2025-05-14 12:38:41');
+(238, 2, 15, 'post', '2025-05-14 17:36:02', '2025-05-14 17:36:02'),
+(239, 2, 13, 'post', '2025-05-14 17:36:04', '2025-05-14 17:36:04'),
+(240, 2, 14, 'post', '2025-05-14 17:36:06', '2025-05-14 17:36:06'),
+(245, 2, 27, 'post', '2025-05-14 17:40:37', '2025-05-14 17:40:37'),
+(254, 2, 28, 'post', '2025-05-14 18:33:57', '2025-05-14 18:33:57'),
+(256, 2, 32, 'post', '2025-05-14 19:22:54', '2025-05-14 19:22:54');
 
 -- --------------------------------------------------------
 
@@ -128,7 +127,9 @@ INSERT INTO `twitter_posts` (`id`, `user_id`, `post_file`, `description`, `creat
 (27, 2, '1747144566.jpg', 'this is a last post', '2025-05-13 13:56:06', '2025-05-13 13:56:06'),
 (28, 2, '', 'Good Morning', '2025-05-14 05:36:58', '2025-05-14 05:36:58'),
 (29, 4, '', 'first post by @suresh_0000', '2025-05-14 11:09:31', '2025-05-14 11:09:31'),
-(31, 4, '', 'good after noon', '2025-05-14 11:13:20', '2025-05-14 11:13:20');
+(31, 4, '', 'good after noon', '2025-05-14 11:13:20', '2025-05-14 11:13:20'),
+(32, 2, '', 'good night', '2025-05-14 19:22:47', '2025-05-14 19:22:47'),
+(33, 2, '', 'good night again', '2025-05-14 19:31:07', '2025-05-14 19:31:07');
 
 -- --------------------------------------------------------
 
@@ -279,7 +280,7 @@ ALTER TABLE `twitter_users`
 -- AUTO_INCREMENT for table `twitters_post_likes`
 --
 ALTER TABLE `twitters_post_likes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
 
 --
 -- AUTO_INCREMENT for table `twitter_followers`
@@ -297,7 +298,7 @@ ALTER TABLE `twitter_notification`
 -- AUTO_INCREMENT for table `twitter_posts`
 --
 ALTER TABLE `twitter_posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `twitter_post_comments`
