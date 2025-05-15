@@ -54,6 +54,22 @@ if(isset($_REQUEST['usernameexits'])){
     }
 }
 
+// check username exits...
+if (isset($_REQUEST['edit_username_exits'])) {
+    $usernamedata = trim($_POST['username'] ?? "");
+    $currentUsername = $_SESSION['userid'];
+
+    $usercheck = "SELECT * FROM twitter_users WHERE username = '$usernamedata' AND username != '$currentUsername'";
+
+    $resultuser = mysqli_query($conn, $usercheck);
+
+    if ($resultuser && $resultuser->num_rows > 0) {
+        echo json_encode(['status' => 'failed']);
+    } else {
+        echo json_encode(['status' => 'success']);
+    }
+}
+
 // login operation on ajax request
 if (isset($_REQUEST['loginuser'])) {
     $loginData = trim(isset($_POST['userid']) ? $_POST['userid'] : "");
@@ -535,25 +551,29 @@ if (isset($_REQUEST['profile_page_record'])){
                 <?php }
                 ?>
 
-                <div class="form-group">
-                    <label>Name: </label>
+                 <div class="form-group">
+                    <label>Name: <span class="edit-userName"></span></label>
                     <input type="hidden" name="userid" value="<?php echo $userDAta['id']?>">
-                    <input type="text" name="name" value="<?php echo $userDAta['name']?>">
+                    <input type="text" id="countName" class="Name" name="name" maxlength="20" oninput="NameCharCount()" value="<?php echo $userDAta['name']?>">
+                    <span style="margin-left: 88%;" id="namecount"></span>
                 </div>
 
                 <div class="form-group">
-                    <label>Username: </label>
-                    <input type="text" name="username" value="<?php echo $userDAta['username']?>">
+                    <label>Username: <span class="edit-userUsername"></span></label>
+                    <input type="hidden" id="edit-valid-username" value="success">
+                    <input type="text" id="countUsername" maxlength="15" class="Username" name="username" oninput="UsernameCharCount()" value="<?php echo $userDAta['username']?>">
+                    <span style="margin-left: 88%;" id="usernamecount"></span>
                 </div>
 
                 <div class="form-group">
-                    <label>Email: </label>
-                    <input type="text" name="email" value="<?php echo $userDAta['email']?>">
+                    <label>Email: <span class="edit-userEmail"></span></label>
+                    <input type="hidden" id="edit-valid-mail" value="success">
+                    <input type="text" class="Email" name="email" value="<?php echo $userDAta['email']?>">
                 </div>
 
                 <div class="form-group">
-                    <label>DOB: </label>
-                    <input type="date" name="dob" value="<?php echo $userDAta['dob']?>">
+                    <label>DOB: <span class="edit-userDOB"></span></label>
+                    <input type="date" class="DOB" name="dob" value="<?php echo $userDAta['dob']?>">
                 </div>
 
                 <div class="form-group">

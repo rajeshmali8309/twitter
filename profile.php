@@ -111,9 +111,21 @@ if(isset($_SESSION["userid"])){ ?>
     });
 
     function updateCharCount() {
-        const bio = document.getElementById('bio');
-        const count = document.getElementById('charCount');
+        var bio = document.getElementById('bio');
+        var count = document.getElementById('charCount');
         count.textContent = `${bio.value.length} / 160`;
+    }
+
+    function NameCharCount() {
+        var name = document.getElementById('countName');
+        var count = document.getElementById('namecount');
+        count.textContent = `${name.value.length} / 20`;
+    }
+
+    function UsernameCharCount() {
+        var bio = document.getElementById('countUsername');
+        var count = document.getElementById('usernamecount');
+        count.textContent = `${bio.value.length} / 15`;
     }
 </script>
 </html>

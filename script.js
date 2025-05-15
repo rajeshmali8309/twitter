@@ -416,6 +416,82 @@ $(document).ready(function () {
     $(document).on("click", "#edit-profile-btn", function() {
         $("#edit-user-data")[0].reset();
         $("#edit-profile-modal").fadeIn();
+
+        // validation on edit user form
+        $("input").blur(function(){
+            var namepattern = /^[A-Za-z ]{3,20}$/;
+            var usernamepattern = /^[a-z0-9_.]{5,15}$/;
+            var emailpattern = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,6}$/;
+            var value = $(this).val().trim();
+
+            var inputID = $(this).attr("class");
+            if($(this).val()=== ''){
+                $(".edit-user" + inputID).text(inputID + " field is Require");
+                $(".edit-user" + inputID).css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+            }else{
+                // Regex for Name
+                if ($("#countName").attr("class") === inputID) {
+                    if (namepattern.test(value)) {
+                        $(".edit-userName").text("");
+                    } else {
+                        $(".edit-userName").text("minimum 3 and maximum 20 characters allow");
+                        $(".edit-userName").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                    }
+                    $("#countName").focus(function(){
+                        $(".edit-userName").text("");
+                    });
+                }
+
+                if (inputID === "Username") {
+                    if (usernamepattern.test(value)) {
+                        $(".edit-userUsername").text("");
+                        //check username exits
+                        var usernamecheck = "action"
+                        $.ajax({
+                            url: "controller.php",
+                            type: 'post',
+                            data: {
+                                "username": value,
+                                "edit_username_exits": usernamecheck
+                            },
+                            success: function (response) {
+                                var userdata = JSON.parse(response);
+                                if (userdata.status == 'failed') {
+                                    $("#edit-valid-username").val("failed");
+                                    $(".edit-userUsername").text("username has already been taken.");
+                                    $(".edit-userUsername").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                                } else {
+                                    $("#edit-valid-username").val("success");
+                                    $(".edit-userUsername").text("");
+                                }
+                            }
+                        });
+                    } else {
+                        $(".edit-userUsername").text("only a-z, 0-9, underscore, dot | 5-15 chars allowed");
+                        $(".edit-userUsername").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                    }
+                    $("#countUsername").focus(function () {
+                        $(".edit-userUsername").text("");
+                    });
+                }
+
+                if (inputID === "Email") {
+                    if (emailpattern.test(value)) {
+                        $(".edit-userEmail").text("");
+                    } else {
+                        $(".edit-userEmail").text("Invalid email format (e.g. name@example.com)");
+                        $(".edit-userEmail").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                    }
+                }
+            }
+        });
+
+        $("input").focus(function(){
+            var inputID = $(this).attr("class");
+            if($(this).val()=== ''){
+                $(".edit-user" + inputID).text("");
+            }
+        });
     });
 
     $(document).on("click", ".close-edit-form", function() {
