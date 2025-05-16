@@ -20,7 +20,7 @@ if (isset($_REQUEST['newuserinsert'])) {
 }
 
 
-// check email exits...
+// check email allready taken...
 if(isset($_REQUEST['mailexits'])){
     $Emaildata = trim(isset($_POST['email']) ? $_POST['email'] : "");
 
@@ -37,7 +37,25 @@ if(isset($_REQUEST['mailexits'])){
     }
 }
 
-// check username exits...
+//check edit email allready taken...
+if(isset($_REQUEST['edit_mail_exits'])){
+    $find_user_info = $_SESSION['userid'];
+    $findusername = "SELECT * FROM `twitter_users` WHERE username = '$find_user_info'";
+    $result = mysqli_query($conn,$findusername);
+    $userDAta = mysqli_fetch_assoc($result);
+    $currentEmail = $userDAta['email'];
+    $editEmail = trim(isset($_POST['edit_email']) ? $_POST['edit_email'] : "");
+
+    $check = "SELECT * FROM twitter_users WHERE email = '$editEmail' AND email != '$currentEmail'";
+    $resultemail = mysqli_query($conn,$check);
+    if ($resultemail && $resultemail->num_rows > 0) {
+        echo json_encode(['status' => 'failed']);
+    } else {
+        echo json_encode(['status' => 'success']);
+    }
+}
+
+//check username allready taken...
 if(isset($_REQUEST['usernameexits'])){
     $usernamedata = trim(isset($_POST['username']) ? $_POST['username'] : "");
 
@@ -54,7 +72,7 @@ if(isset($_REQUEST['usernameexits'])){
     }
 }
 
-// check username exits...
+//check edit username allready taken...
 if (isset($_REQUEST['edit_username_exits'])) {
     $usernamedata = trim($_POST['username'] ?? "");
     $currentUsername = $_SESSION['userid'];
@@ -67,6 +85,23 @@ if (isset($_REQUEST['edit_username_exits'])) {
         echo json_encode(['status' => 'failed']);
     } else {
         echo json_encode(['status' => 'success']);
+    }
+}
+
+// user post delete
+if(isset($_REQUEST['post_delete_id'])){
+    $Post_delete_id = trim(isset($_POST['post_delete_id']) ? $_POST['post_delete_id'] : "");
+
+    $Post_delete_query = "DELETE FROM `twitter_posts` WHERE id = '$Post_delete_id'";
+    $deleteResult = mysqli_query($conn,$Post_delete_query);
+    if($deleteResult){
+        echo json_encode([
+            'status'=>'success'
+        ]);
+    }else{
+        echo json_encode([
+            'status'=>'failed'
+        ]);
     }
 }
 
@@ -236,6 +271,11 @@ if (isset($_REQUEST['Profilepage'])) {
                 $LikeCount = mysqli_query($conn, $Count_query);
                 $likeData = mysqli_fetch_assoc($LikeCount);
 
+                //comment Count 
+                $cmt_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments WHERE post_id = $post_Id";
+                $cmtCount = mysqli_query($conn, $cmt_Count_query);
+                $commentData = mysqli_fetch_assoc($cmtCount);
+
                 // check login user liked post
                 $useridd = $_SESSION['login_user_id'];
                 $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND post_id = '$post_Id'";
@@ -279,7 +319,9 @@ if (isset($_REQUEST['Profilepage'])) {
                             <i class="<?php if(mysqli_num_rows($userLiked_query) > 0){ echo "fa-solid text-pink fa-heart"; }else{ echo "fa-regular fa-heart"; } ?>"> <span class="like-count"><?php if(!empty($likeData['total'])){ echo $likeData['total']; }else{ echo ""; }?></span></i>
                         </a>
 
-                        <a class="comment-post"><i class="fa-regular fa-comment"> <span></span></i></a>
+                        <a class="comment-post" data-post-id="<?= $post['id']; ?>">
+                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if(!empty($commentData['total'])){ echo $commentData['total']; }else{ echo ""; }?></span></i>
+                        </a>
                     </div>
 
 
@@ -517,7 +559,8 @@ if (isset($_REQUEST['profile_page_record'])){
                     <button type="submit" class="edit-save-btn">Save</button>
                     <a class="close-edit-form">Close</a>
                 </div>
-        
+
+                <!-- <p style="text-align: center;">Choose a valid file</p> -->
                 <!-- for user profile_banner -->
                 <?php
                 if(empty($userDAta['cover_picture'])){ ?>
@@ -550,6 +593,7 @@ if (isset($_REQUEST['profile_page_record'])){
                     </div>
                 <?php }
                 ?>
+                <!-- <span>choose a valid file</span> -->
 
                  <div class="form-group">
                     <label>Name: <span class="edit-userName"></span></label>
@@ -642,6 +686,29 @@ if (isset($_REQUEST['post_like_insert'])){
     echo json_encode([
         'like_count' => $data['total'],
         'liked' => $liked
+    ]);
+}
+
+// comment insert & Count operation on ajax request
+if (isset($_REQUEST['post_comment_insert'])){
+    $Comment = trim(isset($_POST['comment_value']) ? $_POST['comment_value'] : "");
+    $userId = $_SESSION['login_user_id'];
+    $postId = $_POST['post_id'];
+
+    // insert comment
+    $comment_insert_query = "INSERT INTO twitter_post_comments (`user_id`, `post_id`, `comments`) VALUES ('$userId','$postId','$Comment')";
+    $comment_insert_result = mysqli_query($conn,$comment_insert_query);
+    if($comment_insert_result){
+        $comment = true;
+    }
+
+    //comments Count 
+    $Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments WHERE post_id = $postId";
+    $comments_count = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($comments_count);
+
+    echo json_encode([
+        'comment_count' => $data['total'],
     ]);
 }
 ?>

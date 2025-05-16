@@ -25,6 +25,16 @@ if(isset($_SESSION["userid"])){ ?>
         .post-reactions a{
             text-decoration: none;
         }
+        .post {
+            width: 663px;
+        }
+        /* .rightbar{
+            margin-right: 28px;
+        }
+        .profile-center-header{
+            margin-left: 45px;
+            width: 48.2%;
+        } */
 
     </style>
 </head>
@@ -39,8 +49,8 @@ if(isset($_SESSION["userid"])){ ?>
     <div class="pagecontainer" id="show-user-profile">
     </div>
 
-    <?php include 'layout/post_model.php';
-    ?>
+    <?php include 'layout/post_model.php'; ?>
+    <?php include 'layout/add_comment_model.php'; ?>
 </body>
 <script>
     
