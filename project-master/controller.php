@@ -249,7 +249,7 @@ if(isset($_REQUEST['follow_opponent_id'])){
     echo json_encode([
         'following_count' => $following['total'],
         'followers_count' => $followers['total'],
-        'following' => $follow
+        'followed' => $follow
     ]);
 }
 
@@ -516,8 +516,7 @@ if(isset($_REQUEST['users_show_limits'])){
         <!-- you might like show 3 user using limit -->
             <?php
             $useridd = $_SESSION['login_user_id'];
-            $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
-              AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')";
+            $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'";
             $users_result = mysqli_query($conn, $all_users);
             while($userinfo = $users_result->fetch_assoc()) {
                     $user_name = $userinfo['name'];
@@ -536,7 +535,7 @@ if(isset($_REQUEST['users_show_limits'])){
                         <div style="color: rgb(95, 94, 94);; font-size: 15px;">@<?php echo $userinfo['username']?></div>
                     </div>
                     <div class="might-follow-users">
-                        <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
+                        <a class="user-follow-following" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
                     </div>
                 </div>
             <?php }
@@ -626,11 +625,7 @@ if (isset($_REQUEST['profile_page_record'])){
              $offset = 0;
              $Limit = 3;
              $useridd = $_SESSION['login_user_id'];
-
-             $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
-              AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')
-               LIMIT $offset,$Limit";
-
+             $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd' LIMIT $offset,$Limit";
              $users_result = mysqli_query($conn, $all_users);
                 while($userinfo = $users_result->fetch_assoc()) {
                         $user_name = $userinfo['name'];
@@ -649,7 +644,7 @@ if (isset($_REQUEST['profile_page_record'])){
                             <div style="color: rgb(95, 94, 94);; font-size: 15px;">@<?php echo $userinfo['username']?></div>
                         </div>
                         <div class="might-follow-users">
-                            <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
+                            <a class="user-follow-following" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
                         </div>
                     </div>
                 <?php }

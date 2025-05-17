@@ -1267,7 +1267,7 @@
 .might-follow-users{
     border: 1px solid black;
     margin: 20px;
-    margin-left: auto;
+    margin-left: 45px;
     padding: 3px 15px;
     background-color: black;
     border-radius: 20px;
@@ -1599,24 +1599,4 @@
 
 .followers-show{
     margin-left: 10px;
-}
-
-.follow-btn {
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    color: red;
-    transition: all 0.3s ease;
-    display: inline-block;
-    text-decoration: none;
-}
-
-.follow-btn.following {
-    border-color: gray;
-    color: white;
-}
-
-.follow-btn.following:hover {
-    border-color: red;
-    color: red;
 }

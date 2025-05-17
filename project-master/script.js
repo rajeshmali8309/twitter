@@ -840,14 +840,6 @@ $(document).ready(function () {
         var might_user_id = $(this).data('post-id');
         var showfollow = $(".show-profile-followers");
         follow_btn = $(this);
-
-        // If already following, show confirm before unfollowing
-        if (follow_btn.hasClass("following")) {
-            if (!confirm("Are you sure you want to unfollow?")) {
-                return;
-            }
-        }
-
         $.ajax({
             url: 'controller.php',
             method: 'POST',
@@ -857,26 +849,32 @@ $(document).ready(function () {
             success: function (followResult) {
                 let response = JSON.parse(followResult);
 
-                // Update counts
-                showfollow.find('.following-show').text(response.following_count || "0");
-                showfollow.find('.followers-show').text(response.followers_count || "0");
-                
-                if (response.following) {
-                    follow_btn.addClass("following").text("Following");
-                } else {
-                    follow_btn.removeClass("following").text("Follow");
+                //Following count update
+                if (response.following_count == 0) {
+                    showfollow.find('.following-show').text("0");
+                }else{
+                    showfollow.find('.following-show').text(response.following_count);
                 }
+
+                // Followers count update
+                if (response.followers_count == 0) {
+                    showfollow.find('.followers-show').text("0");
+                }else{
+                    showfollow.find('.followers-show').text(response.followers_count);
+                }
+                
+                // button change Follow/Unfollow
+
+                // let icon = likeBtn.find('i');
+                // if (response.liked) {
+                //     follow_btn.removeClass('fa-regular fa-heart').addClass('fa-solid text-pink fa-heart');
+                // } else {
+                //     follow_btn.removeClass('fa-solid text-pink fa-heart').addClass('fa-regular fa-heart');
+                // }
+                // $(".text-pink").css({ "color": "rgb(231, 14, 50);" });
             }
         });
     });
-});
-
-// Hover effect to show "Unfollow" when already following
-$(document).on("mouseenter", ".user-follow-following.following", function () {
-    $(this).text("Unfollow");
-});
-$(document).on("mouseleave", ".user-follow-following.following", function () {
-    $(this).text("Following");
 });
 
 function postCharCount() {

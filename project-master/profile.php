@@ -28,7 +28,7 @@ if(isset($_SESSION["userid"])){ ?>
         .post {
             width: 663px;
         }
-        /* .rightbar{
+        .rightbar{
             margin-right: 28px;
             right: -17px;
         }
@@ -39,7 +39,7 @@ if(isset($_SESSION["userid"])){ ?>
 
         #search {
             width: 99%;
-        } */
+        }
 
     </style>
 </head>
