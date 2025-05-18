@@ -9,6 +9,11 @@
     <link rel="icon" type="image/x-icon" href="image/logo.svg">
     <script src="script.js"></script>
     <title>sign up & sign in page</title>
+    <style>
+        .form-group input{
+            margin-top: 0px;
+        }
+    </style>
 </head>
 <body>
     <div class="overlay"></div>

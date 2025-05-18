@@ -869,6 +869,18 @@ $(document).ready(function () {
             }
         });
     });
+
+    // Show following/followers modal dynamically
+    $(document).on('click', '.following-show', function () {
+        $('.overlay-bg').fadeIn();
+        $('.user-list-popup').fadeIn();
+    });
+
+    // Close modal dynamically
+    $(document).on('click', '.close-user-follow', function () {
+        $('.overlay-bg').fadeOut();
+        $('.user-list-popup').fadeOut();
+    });
 });
 
 // Hover effect to show "Unfollow" when already following

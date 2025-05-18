@@ -541,6 +541,9 @@ if(isset($_REQUEST['users_show_limits'])){
                 </div>
             <?php }
             ?>
+            <div>
+                <a class="show-less-user-btn">Show less</a>
+             </div>
         </div>
     <?php
 }
@@ -587,7 +590,7 @@ if (isset($_REQUEST['profile_page_record'])){
             ?>
             <div class="post" id="profile-dp-show">
                 <?php if(empty($userDAta['profile_picture'])){ ?>
-                    <span><?php echo $_SESSION['firstchr']?></span>
+                    <span class="first_char"><?php echo $_SESSION['firstchr']?></span>
                 <?php }else{
                     ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" id="profile-dp-show" alt="no file"><?php
                 }?>
@@ -598,10 +601,38 @@ if (isset($_REQUEST['profile_page_record'])){
                     <p><i class="fa-solid fa-calendar-days"></i> <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?></p>
                     <p><?php echo $userDAta['bio'];?></p>
                     <p class="show-profile-followers">
-                        <b class="following-show"><?php echo $following['total'];?></b> Following
-                        <b class="followers-show"><?php echo $followers['total'];?></b>Follower
+                        <span class="following-show"><b><?php echo $following['total'];?></b> Following</span>
+                        <span class="followers-show"><b><?php echo $followers['total'];?></b> Follower</span> 
                     </p>
                     </div>
+            </div>
+            <!-- following/followers user show -->
+            <?php
+                $followingUsersQuery = "SELECT u.id, u.name, u.username, u.profile_picture
+                                        FROM twitter_followers tf
+                                        JOIN twitter_users u ON tf.followers = u.id
+                                        WHERE tf.following = $userId";
+
+                $result = mysqli_query($conn, $followingUsersQuery);
+            ?>
+            <div class="overlay-bg"></div>
+             <div class="user-list-popup">
+                <div class="close-user-follow-show"><span class="close-user-follow">Close</span></div>
+                <div class="popup-header-follow">@<?php echo $userDAta['username'];?> -><span class="popup-label"><b><?php echo $following['total'];?> </b>Following</span></div>
+                  <?php
+                   while($user = mysqli_fetch_assoc($result)){
+                    $firstChar = strtoupper(substr($user['name'], 0, 1)); ?>
+                    <div class="user-item">
+                        <img src="profile_pic/<?php echo $user['profile_picture'] ?>" class="user-dp" alt="User DP">
+                        <div class="user-info">
+                            <div class="user-name"><?php echo $user['name']; ?></div>
+                            <div class="user-username">@<?php echo $user['username']; ?></div>
+                        </div>
+                        <button class="follow-btn-list">Following</button>
+                    </div>
+                   <?php }
+                  ?>
+                <!-- More items if needed... -->
             </div>
             <div class="profile-links-btn">
                 <a id="Posts" class="profile-links-active">Posts</a>
