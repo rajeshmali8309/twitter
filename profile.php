@@ -25,10 +25,10 @@ if(isset($_SESSION["userid"])){ ?>
         .post-reactions a{
             text-decoration: none;
         }
-        .post {
+        /* .post {
             width: 663px;
         }
-        /* .rightbar{
+        .rightbar{
             margin-right: 28px;
             right: -17px;
         }
