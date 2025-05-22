@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 03:59 PM
+-- Generation Time: May 21, 2025 at 09:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -140,16 +140,17 @@ INSERT INTO `twitter_followers` (`id`, `followers`, `following`, `created_at`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `twitter_notification`
+-- Table structure for table `twitter_notifications`
 --
 
-CREATE TABLE `twitter_notification` (
+CREATE TABLE `twitter_notifications` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `like_id` int(11) DEFAULT NULL,
-  `follow_id` int(11) DEFAULT NULL,
-  `comment_id` int(11) DEFAULT NULL,
-  `type` enum('like','follow','comment') DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `post_id` int(11) DEFAULT NULL,
+  `type` enum('follow','like','comment') NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -256,25 +257,11 @@ INSERT INTO `twitter_post_comments` (`id`, `user_id`, `post_id`, `comments`, `cr
 
 CREATE TABLE `twitter_post_comments_reply` (
   `id` int(11) NOT NULL,
-  `comment_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `comment_reply` varchar(1000) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `comment_id` int(11) NOT NULL,
+  `comment_reply` varchar(1000) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `twitter_post_comment_likes`
---
-
-CREATE TABLE `twitter_post_comment_likes` (
-  `id` int(11) NOT NULL,
-  `comment_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `comment_likes` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -334,14 +321,13 @@ ALTER TABLE `twitter_followers`
   ADD KEY `following` (`following`);
 
 --
--- Indexes for table `twitter_notification`
+-- Indexes for table `twitter_notifications`
 --
-ALTER TABLE `twitter_notification`
+ALTER TABLE `twitter_notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `like_id` (`like_id`),
-  ADD KEY `follow_id` (`follow_id`),
-  ADD KEY `comment_id` (`comment_id`);
+  ADD KEY `sender_id` (`sender_id`),
+  ADD KEY `post_id` (`post_id`);
 
 --
 -- Indexes for table `twitter_posts`
@@ -363,16 +349,9 @@ ALTER TABLE `twitter_post_comments`
 --
 ALTER TABLE `twitter_post_comments_reply`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `comment_id` (`comment_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `twitter_post_comment_likes`
---
-ALTER TABLE `twitter_post_comment_likes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `comment_id` (`comment_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`),
+  ADD KEY `comment_id` (`comment_id`);
 
 --
 -- Indexes for table `twitter_users`
@@ -397,9 +376,9 @@ ALTER TABLE `twitter_followers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
--- AUTO_INCREMENT for table `twitter_notification`
+-- AUTO_INCREMENT for table `twitter_notifications`
 --
-ALTER TABLE `twitter_notification`
+ALTER TABLE `twitter_notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -418,12 +397,6 @@ ALTER TABLE `twitter_post_comments`
 -- AUTO_INCREMENT for table `twitter_post_comments_reply`
 --
 ALTER TABLE `twitter_post_comments_reply`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `twitter_post_comment_likes`
---
-ALTER TABLE `twitter_post_comment_likes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -451,13 +424,12 @@ ALTER TABLE `twitter_followers`
   ADD CONSTRAINT `twitter_followers_ibfk_2` FOREIGN KEY (`following`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `twitter_notification`
+-- Constraints for table `twitter_notifications`
 --
-ALTER TABLE `twitter_notification`
-  ADD CONSTRAINT `twitter_notification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `twitter_notification_ibfk_2` FOREIGN KEY (`like_id`) REFERENCES `twitters_post_likes` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `twitter_notification_ibfk_3` FOREIGN KEY (`follow_id`) REFERENCES `twitter_followers` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `twitter_notification_ibfk_4` FOREIGN KEY (`comment_id`) REFERENCES `twitter_post_comments` (`id`) ON DELETE SET NULL;
+ALTER TABLE `twitter_notifications`
+  ADD CONSTRAINT `twitter_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `twitter_notifications_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `twitter_notifications_ibfk_3` FOREIGN KEY (`post_id`) REFERENCES `twitter_posts` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `twitter_posts`
@@ -476,15 +448,9 @@ ALTER TABLE `twitter_post_comments`
 -- Constraints for table `twitter_post_comments_reply`
 --
 ALTER TABLE `twitter_post_comments_reply`
-  ADD CONSTRAINT `twitter_post_comments_reply_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `twitter_post_comments` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `twitter_post_comments_reply_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `twitter_post_comment_likes`
---
-ALTER TABLE `twitter_post_comment_likes`
-  ADD CONSTRAINT `twitter_post_comment_likes_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `twitter_post_comments` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `twitter_post_comment_likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `twitter_post_comments_reply_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `twitter_users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `twitter_post_comments_reply_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `twitter_posts` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `twitter_post_comments_reply_ibfk_3` FOREIGN KEY (`comment_id`) REFERENCES `twitter_post_comments` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1245,6 +1245,10 @@
     padding-top: 12px;
 }
 
+.profile-avatar a{
+    color: white;
+}
+
 .avatar img{
     border-radius: 50%;
 }
@@ -1413,11 +1417,14 @@
 
 .remove-banner {
     position: absolute;
-    top: 80%;
-    left: 50%;
+    top: 90%;
+    left: 90%;
     transform: translate(-50%, -50%);
-    font-size: 16px;
+    font-size: 12px;
     color: Black;
+    background-color: white;
+    padding: 3px 10px;
+    border-radius: 2px;
 }
 
 .fileerror{
@@ -1637,6 +1644,10 @@
     margin-left: 10px;
 }
 
+.other-followers-show{
+    margin-left: 10px;
+}
+
 .follow-btn {
     padding: 5px 10px;
     border-radius: 4px;
@@ -1701,6 +1712,17 @@
 
 .following-show:hover,
 .followers-show:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+.other-following-show,
+.other-followers-show{
+    font-weight: bold;
+}
+
+.other-following-show:hover,
+.other-followers-show:hover {
     cursor: pointer;
     color: blue;
 }
@@ -1821,7 +1843,7 @@
     cursor: pointer;
 }
 
-.other-follow-btn{
+.other-profile-follow-btn{
     background-color: rgb(8, 8, 8);
     margin-left: 380px;
     padding: 8px 15px;
@@ -1832,7 +1854,7 @@
     font-size: 14px;
 }
 
-.other-follow-btn:hover{
+.other-profile-follow-btn:hover{
     background-color: rgb(53, 52, 52);
 }
 
@@ -1893,4 +1915,62 @@
 .who-user-info a:hover{
     text-decoration: none;
     color: rgb(85, 84, 84);
+}
+
+.following-show-userfolowers.hovering {
+    color: red !important;
+}
+
+.other-user_follow-btn.hovering-other {
+    color: red !important;
+}
+
+.search-popup {
+    position: absolute;
+    top: 105%; /* thoda niche khule input ke */
+    width: 100%;
+    background: white; /* dark theme jaise Twitter */
+    border: 1px solid rgb(185, 181, 181);
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 999;
+    display: none; /* default me band rahega */
+}
+
+/* search user item styling */
+.search-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.search-user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info span:first-child {
+    font-weight: bold;
+    color: rgb(15, 15, 15);
+}
+
+.user-info span:last-child {
+    color: gray;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#search-message {
+    color: gray;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
 }
