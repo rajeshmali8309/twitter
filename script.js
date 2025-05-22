@@ -1085,13 +1085,15 @@ $(document).ready(function () {
     });
 
     // ajax request for search ...
-    function searchUsers(query) {
+    function searchUsers(searchData) {
         $.ajax({
-            url: 'search-users.php', // apni PHP file ka path
+            url: 'controller.php',
             method: 'POST',
-            data: { query: query },
-            success: function (response) {
-                $('#search-popup').html(response); // users ka list show hoga
+            data: {
+                "search_input_data": searchData,
+            },
+            success: function (result) {
+                $("#search-popup").html(result);
             }
         });
     }

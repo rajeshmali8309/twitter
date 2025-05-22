@@ -964,11 +964,17 @@ if (isset($_REQUEST['profile_page_record'])) {
                 <div class="users-might">
                     <?php
                     if (empty($userinfo['profile_picture'])) {
-                    ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
-                                                                                                        } else {
-                                                                                                            ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                            ?>
+                    ?> <div class="profile-avatar">
+                            <span><?php echo $userfirstchar; ?></span>
+                        </div> 
+                        <?php
+                    } else {
+                    ?> 
+                    <div><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>">
+                        <img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a>
+                    </div> <?php
+                    }
+                    ?>
                     <div style="margin-left: 10px;">
                         <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><?php echo $userinfo['name'] ?></a></strong></div>
                         <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>">@<?php echo $userinfo['username'] ?></a></div>
@@ -1095,6 +1101,7 @@ if (isset($_REQUEST['user_post_insert'])) {
 if (isset($_REQUEST['post_like_insert'])) {
     $userId = $_SESSION['login_user_id'];
     $postId = $_POST['post_id'];
+    $current_user = $_SESSION['userid'];
 
     // Check if already like
     $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$postId'";
@@ -1109,7 +1116,11 @@ if (isset($_REQUEST['post_like_insert'])) {
         // insert like if not liked
         $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `post_id`, `likeable_type`) VALUES ('$userId','$postId','post')";
         $like_insert_result = mysqli_query($conn, $like_insert_query);
-        if ($like_insert_query) {
+        if ($like_insert_result) {
+            // $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, type, message) 
+            // VALUES ('$postId', '$userId', 'like', '@$current_user liked your post.')";
+
+            // $notification = mysqli_query($conn, $insert_notification);
             $liked = true;
         }
     }
@@ -1256,22 +1267,25 @@ if (isset($_REQUEST['other_Profile_page'])) {
                     <div class="post-reactions">
                         <a class="like-post" data-post-id="<?= $post['id']; ?>">
                             <i class="<?php if (mysqli_num_rows($userLiked_query) > 0) {
-                                            echo "fa-solid text-pink fa-heart";
-                                        } else {
-                                            echo "fa-regular fa-heart";
-                                        } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
-                                                                                                                                                                                                    echo $likeData['total'];
-                                                                                                                                                                                                } else {
-                                                                                                                                                                                                    echo "";
-                                                                                                                                                                                                } ?></span></i>
+                                    echo "fa-solid text-pink fa-heart";
+                                } else {
+                                    echo "fa-regular fa-heart";
+                                } ?>"> 
+                                <span class="like-count"><?php if (!empty($likeData['total'])) {
+                                    echo $likeData['total'];
+                                } else {
+                                    echo "";
+                                } ?>
+                                </span>
+                            </i>
                         </a>
 
                         <a class="comment-post" data-post-id="<?= $post['id']; ?>">
                             <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
-                                                                                                echo $commentData['total'];
-                                                                                            } else {
-                                                                                                echo "";
-                                                                                            } ?></span></i>
+                                echo $commentData['total'];
+                            } else {
+                                echo "";
+                            } ?></span></i>
                         </a>
                     </div>
                 </div>
@@ -1382,6 +1396,35 @@ if (isset($_REQUEST['follow_other_profile_id'])) {
     ]);
 }
 
-//Notification work
+// search 
+if (isset($_REQUEST['search_input_data'])) {
+    $search_data = trim(isset($_POST['search_input_data']) ? $_POST['search_input_data'] : "");
+    if ($search_data !== "") {
+        $search_query = "SELECT id, name, username, profile_picture FROM twitter_users WHERE name LIKE '%$search_data%' OR username LIKE '%$search_data%'";
+        $result = mysqli_query($conn, $search_query);
 
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                <a href="other_user_profile.php?username=<?php echo $row['username'];?>" style="text-decoration: none; cursor: pointer;">
+                    <div class="search-user">
+                    <img src="profile_pic/<?php echo $row['profile_picture'];?>" alt="DP">
+                    <div class="user-info">
+                        <span><?php echo $row['name'];?></span>
+                        <span>@<?php echo $row['username']; ?></span>
+                    </div>
+                </div>
+                </a>
+                <?php
+            }
+        } else {
+            // Data not found message
+            ?>
+            <div style="text-align:center;">
+                <span>Data not found</span>
+            </div>
+            <?php
+        }
+    }
+}
 ?>
