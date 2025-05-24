@@ -1097,7 +1097,6 @@ $(document).ready(function () {
             }
         });
     }
-
 });
 
 function postCharCount() {
@@ -1122,3 +1121,25 @@ function commentCharCount() {
 function otherUserProfile(otherUserId){
     window.location.href="other_user_profile.php?username="+otherUserId;
 }
+
+function notificationCount() {
+    value = "is_read_notification";
+    $.ajax({
+        url: 'controller.php',
+        method: 'POST',
+        data: {
+            "is_read_notification": value,
+        },
+        dataType: 'json',
+        success: function (result) {
+            if (result.unread_count !== '0') {
+                $(".show-notificatio-count").css({"display":"block"});
+                $(".show-notificatio-count").html('<i class="fa-solid fa-circle"> ' +result.unread_count +'</i>');
+            } else {
+                $(".show-notificatio-count").css({"display":"none"});
+            }
+        }
+    });
+}
+setInterval(notificationCount, 200);
+

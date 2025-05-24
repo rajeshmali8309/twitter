@@ -1472,6 +1472,16 @@
     border-radius: 50%;
 }
 
+.post-information a{
+   text-decoration: none;
+   color: black;
+}
+
+.post-information a:hover{
+   text-decoration: none;
+   color: black;
+}
+
 .input-post img{
     width: 60px;
     border-radius: 50%;
@@ -1666,43 +1676,6 @@
 .follow-btn.following:hover {
     border-color: red;
     color: red;
-}
-
-/* start following/followers show list */
-.overlay-bg {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 998;
-}
-
-.user-list-popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    padding: 20px;
-    padding-top: 0px;
-    width: 400px;
-    max-height: 500px;
-    overflow-y: auto;
-    z-index: 999;
-}
-
-.close-following-list{
-    margin-left: 50px;
-    cursor: pointer;
-    border-radius: 20px;
-    color: rgb(61, 60, 60);
-    font-weight: 400;
 }
 
 .following-show,
@@ -1973,4 +1946,112 @@
     padding: 10px;
     text-align: center;
     font-size: 14px;
+}
+
+.search-firstchar{
+    margin: 0px;
+    padding: 6px 15px;
+    background-color: rgb(247, 115, 7);
+    border-radius: 50%;
+    color: white;
+    font-weight: 500;
+}
+
+.show-notificatio-count{
+    color: rgb(34, 154, 252);
+    font-size: 10px;
+    display: block;
+}
+
+.delete-notification-icon{
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.no-notification{
+    margin: 22px 0px 7px;
+    text-align: center;
+    margin-left: 70px;
+}
+
+.comment-reply-section{
+    border: 1px solid black;
+}
+
+.comment-reply-section p{
+    font-size: 16px;
+    margin-left: 50px;
+}
+
+.comment-reply-section span{
+    font-size: 17px;
+    color: blue;
+    cursor: pointer;
+}
+
+
+.comment-information{
+    height: auto;
+    padding: 0px 0px;
+}
+
+.comment-information span{
+    margin: 30px 0px 0px 0px;
+    padding: 10px 17px;
+    background-color: rgb(247, 115, 7);
+    border-radius: 50%;
+    font-size: 16px;
+    color: white;
+}
+
+.comment-information p{
+    display: inline;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.comment-information i{
+    font-size: 14px;
+    color: black;
+    margin-left: 150px;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.comment-information img{
+    width: 30px;
+    border-radius: 50%;
+}
+
+.comment-information div{
+    margin: 5px 40px 5px 40px;
+}
+
+.comment-information i:hover{
+    cursor: pointer;
+    background-color: rgb(221, 219, 219);
+    text-decoration: none;
+}
+
+.comment-show-discription{
+    margin-right: 10px;
+}
+
+.commentshow-reactions{
+    margin: 40px;
+    margin-top: 0px;
+    padding: 5px;
+}
+
+.commentshow-reactions a{
+    font-size: 14px;
+    color: black;
+    margin-left: 165px;
+    cursor: pointer;
+}
+
+.commentshow-reactions span{
+    font-size: 14px;
+    color: black;
+    font-weight: 400;
 }
