@@ -58,28 +58,24 @@ if(isset($_SESSION["userid"])){ ?>
             </div>
 
             <?php
-             if(isset($_REQUEST['post_id'])){
-                $post_ID = $_REQUEST['post_id'];
+             if(isset($_REQUEST['reply'])){
+                $post_ID = $_REQUEST['reply'];
              }
 
-             $post_details_query = "SELECT 
-                        p.id AS post_id,
-                        p.user_id,
-                        p.post_file,
-                        p.description,
-                        p.created_at,
-                        u.username,
+                $post_details_query = "SELECT 
+                        c.id AS comment_id,
+                        c.user_id,
+                        c.post_id,
+                        c.comments,
+                        c.created_at,
+                        u.id AS user_id,
                         u.name,
-                        u.join_date,
-                        u.profile_picture,
-                        u.cover_picture
-                    FROM 
-                        twitter_posts AS p
-                    JOIN 
-                        twitter_users AS u ON p.user_id = u.id
-                    WHERE 
-                        p.id = $post_ID
-                    ";
+                        u.username,
+                        u.profile_picture
+                    FROM twitter_post_comments AS c
+                    JOIN twitter_users AS u ON c.user_id = u.id
+                    WHERE c.id = '$post_ID'
+                ";
 
                 $result = mysqli_query($conn, $post_details_query);
 
@@ -116,29 +112,27 @@ if(isset($_SESSION["userid"])){ ?>
                     }
 
                     //like Count 
-                    $post_Id = $post['post_id'];
-                    $Count_query = "
-                        SELECT COUNT(*) AS total 
-                        FROM twitters_post_likes 
-                        WHERE post_id = $post_Id AND likeable_type = 'post'
-                    ";
+                    $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $post[comment_id]
+                    AND likeable_type = 'comment'";
                     $LikeCount = mysqli_query($conn, $Count_query);
                     $likeData = mysqli_fetch_assoc($LikeCount);
 
-                    //comment Count 
-                    $cmt_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments WHERE post_id = $post_Id";
-                    $cmtCount = mysqli_query($conn, $cmt_Count_query);
-                    $commentData = mysqli_fetch_assoc($cmtCount);
-
                     // check login user liked post
                     $useridd = $_SESSION['login_user_id'];
-                    $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND post_id = '$post_Id'";
+                    $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND liked_id = $post[comment_id]
+                    AND likeable_type = 'comment'";
                     $userLiked_query = mysqli_query($conn, $query_liked_user);
+
+                    //comment reply Count 
+                    $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $post[comment_id]";
+                    $reply_count = mysqli_query($conn, $reply_Count_query);
+                    $replydata = mysqli_fetch_assoc($reply_count);
+
 
                     ?> 
                     <div class="center-content" id="notifications_data" style="padding: 68px 0px;">
                         <div class="user-post-details">
-                            <input type="hidden" id="send-post-id" value="<?php echo $_REQUEST['post_id']; ?>">
+                            <input type="hidden" id="send-post-id" value="<?php echo $_REQUEST['reply']; ?>">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
                                     <a style="text-decoration: none; color:black;"
@@ -168,36 +162,12 @@ if(isset($_SESSION["userid"])){ ?>
 
                             <div class="post-information">
                                 <div>
-                                    <p class="post-discription"><?php echo $post['description']; ?></p>
+                                    <p class="post-discription"><?php echo $post['comments']; ?></p>
                                 </div>
                             </div>
 
-                            <?php
-                            $myfile = $post['post_file'];
-                            if (!empty($myfile)) {
-                                $ext = explode(".", $myfile);
-                                if (strtolower(end($ext)) == "mp4") {
-                            ?>
-                                    <div class="post-img">
-                                        <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                            <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
-                                        </video>
-                                    </div>
-                                <?php
-                                } else {
-                                ?>
-                                    <div class="post-img">
-                                        <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="97%" height="450px">
-                                    </div>
-                                <?php
-                                } ?>
-
-                            <?php
-                             }
-                            ?>
-
                             <div class="post-reactions">
-                                <a class="like-post" data-post-id="<?= $post['post_id']; ?>">
+                                <a class="like-comment" data-comment-id="<?= $post['comment_id']; ?>">
                                     <i class="<?php if (mysqli_num_rows($userLiked_query) > 0) {
                                                     echo "fa-solid text-pink fa-heart";
                                                 } else {
@@ -213,11 +183,11 @@ if(isset($_SESSION["userid"])){ ?>
                                     </i>
                                 </a>
 
-                                <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
+                                <a class="reply-post" data-comment-id="<?= $post['comment_id']; ?>">
                                     <i class="fa-regular fa-comment">
                                         <span class="comment-count">
-                                            <?php if (!empty($commentData['total'])) {
-                                                echo $commentData['total'];
+                                            <?php if (!empty($replydata['total'])) {
+                                                echo $replydata['total'];
                                             } else {
                                                 echo "";
                                             } ?>
@@ -229,17 +199,18 @@ if(isset($_SESSION["userid"])){ ?>
                     <?php
 
                     $comment_query = "SELECT 
-                    c.id AS comment_id,
-                    c.user_id,
-                    c.post_id,
-                    c.comments,
-                    c.created_at,
-                    u.name,
-                    u.username,
-                    u.profile_picture
-                    FROM twitter_post_comments AS c
-                    JOIN twitter_users AS u ON c.user_id = u.id
-                    WHERE c.post_id = $post_ID ORDER BY c.created_at DESC";
+                        r.id,
+                        r.user_id,
+                        r.comment_id,
+                        r.comment_reply,
+                        r.created_at,
+                        u.name,
+                        u.username,
+                        u.profile_picture
+                    FROM twitter_post_comments_reply AS r
+                    JOIN twitter_users AS u ON r.user_id = u.id
+                    WHERE r.comment_id = '$post_ID'
+                    ORDER BY r.created_at DESC";
 
                     $comment_result = mysqli_query($conn, $comment_query);
 
@@ -276,24 +247,24 @@ if(isset($_SESSION["userid"])){ ?>
                         }
                         
 
-                        //like Count 
-                        $post_Id = $data['comment_id'];
-                        $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $post_Id
-                        AND likeable_type = 'comment'";
+                        // //like Count 
+                        // $post_Id = $data['comment_id'];
+                        // $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $post_Id
+                        // AND likeable_type = 'comment'";
 
-                        $LikeCount = mysqli_query($conn, $Count_query);
-                        $likeData = mysqli_fetch_assoc($LikeCount);
+                        // $LikeCount = mysqli_query($conn, $Count_query);
+                        // $likeData = mysqli_fetch_assoc($LikeCount);
 
-                        //comment reply Count 
-                        $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $data[comment_id]";
-                        $reply_count = mysqli_query($conn, $reply_Count_query);
-                        $replydata = mysqli_fetch_assoc($reply_count);
+                        // //comment reply Count 
+                        // $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $data[comment_id]";
+                        // $reply_count = mysqli_query($conn, $reply_Count_query);
+                        // $replydata = mysqli_fetch_assoc($reply_count);
 
-                        // check login user liked post
-                        $useridd = $_SESSION['login_user_id'];
-                        $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND liked_id = '$post_Id'
-                        AND likeable_type = 'comment'";
-                        $userLiked_query = mysqli_query($conn, $query_liked_user);
+                        // // check login user liked post
+                        // $useridd = $_SESSION['login_user_id'];
+                        // $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND liked_id = '$post_Id'
+                        // AND likeable_type = 'comment'";
+                        // $userLiked_query = mysqli_query($conn, $query_liked_user);
 
                         ?>
                         <div class="user-post-details" style="margin-left: 120px;">
@@ -316,42 +287,20 @@ if(isset($_SESSION["userid"])){ ?>
                             </div>
  
                             <div class="post-information">
-                                <a href="reply.php?reply=<?php echo $data['comment_id']; ?>">
-                                    <div>
-                                        <p class="comment-show-discription"><?php echo $data['comments'] ?></p>
-                                    </div>
-                                </a>
+                                <div>
+                                    <p class="comment-show-discription"><?php echo $data['comment_reply'] ?></p>
+                                </div>
                             </div>
 
                             <div class="commentshow-reactions">
                                 <a class="like-comment" data-comment-id="<?= $data['comment_id']; ?>">
-                                    <i class="<?php if (mysqli_num_rows($userLiked_query) > 0){
-                                        echo "fa-solid text-pink fa-heart";
-                                    } else {
-                                        echo "fa-regular fa-heart";
-                                    } ?>">
-                                        <span class="comment-like-count">
-                                            <?php if (!empty($likeData['total'])) {
-                                                echo $likeData['total'];
-                                            } else {
-                                                echo "";
-                                            } ?>
-                                        </span>
+                                    <i class="fa-regular fa-heart">
+                                        <span class="comment-like-count">2</span>
                                     </i>
                                 </a>
 
                                 <a class="reply-post" data-comment-id="<?= $data['comment_id']; ?>">
-                                    <i class="fa-regular fa-comment"> 
-                                        <span class="reply-count">
-                                            <?php 
-                                                if (!empty($replydata['total'])) {
-                                                        echo $replydata['total'];
-                                                } else {
-                                                    echo "";
-                                                } 
-                                            ?>
-                                        </span>
-                                    </i>
+                                    <i class="fa-regular fa-comment"> <span class="reply-count">2</span></i>
                                 </a>
                             </div>
                         </div>
