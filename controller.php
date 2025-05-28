@@ -1022,7 +1022,7 @@ if (isset($_REQUEST['profile_page_record'])) {
                     <div class="banner">
                         <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
                         <i class="icon" style="color: black;" onclick="document.getElementById('banner-upload').click();">+</i>
-                        <span class="remove-banner">Remove</span>
+                        <!-- <span class="remove-banner">Remove</span> -->
                         <span class="fileerror"></span>
                         <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                         <input type="hidden" name="profile_cover" class="file_banner" value="<?php echo $userDAta['cover_picture']; ?>">
@@ -1086,7 +1086,7 @@ if (isset($_REQUEST['profile_page_record'])) {
 // Post insert operation on ajax request
 if (isset($_REQUEST['user_post_insert'])) {
     $user_id = trim(isset($_POST['user_id']) ? $_POST['user_id'] : "");
-    $Description = trim(isset($_POST['post_description']) ? $_POST['post_description'] : "");
+    $Description = trim(isset($_POST['index_heppening_input']) ? $_POST['index_heppening_input'] : "");
     $PostFile = '';
 
     // for post file
@@ -1211,6 +1211,58 @@ if (isset($_REQUEST['comment_like_insert'])) {
     ]);
 }
 
+// comment like insert & Count operation on ajax request
+if (isset($_REQUEST['reply_like_insert'])) {
+    $userId = $_SESSION['login_user_id'];
+    $commentID = $_POST['reply_id'];
+    $current_user_name = $_SESSION['userid'];
+
+    // find comment id to userid
+    $find_userQuery = "SELECT * FROM twitter_post_comments_reply WHERE id = '$commentID'";
+    $userResult = mysqli_query($conn, $find_userQuery);
+    $postUser = mysqli_fetch_assoc($userResult);
+    $UserID = $postUser['user_id'];
+
+    // Check if already like
+    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND liked_id = '$commentID' AND likeable_type = 'reply'";
+    $check = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check) > 0) {
+        // if liked to unlike
+        $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND liked_id = '$commentID' AND likeable_type = 'reply'";
+        $runResult = mysqli_query($conn, $delete_like_query);
+        if($runResult){
+            $delete_notification = "DELETE FROM `twitter_notifications` WHERE post_id = '$commentID' AND type = 'like'";
+            $delete_notification_result = mysqli_query($conn, $delete_notification);
+            $liked = false;
+        }
+    } else {
+        // insert like if not liked
+        $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `liked_id`, `likeable_type`) VALUES ('$userId','$commentID','reply')";
+        $like_insert_result = mysqli_query($conn, $like_insert_query);
+        if ($like_insert_result) {
+            if ($UserID === $userId) {
+                $liked = true;
+            } else {
+                $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, post_id, type, message)
+                VALUES ('$UserID', '$userId', '$commentID', 'like', '@$current_user_name liked your reply.')";
+                $notification = mysqli_query($conn, $insert_notification);
+                $liked = true;
+            }
+        }
+    }
+
+    // Like count
+    $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $commentID AND likeable_type = 'reply'";
+    $LikeCount = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($LikeCount);
+
+    echo json_encode([
+        'reply_like_count' => $data['total'],
+        'liked' => $liked
+    ]);
+}
+
 // comment insert & Count operation on ajax request
 if (isset($_REQUEST['post_comment_insert'])) {
     $Comment = trim(isset($_POST['comment_value']) ? $_POST['comment_value'] : "");
@@ -1249,7 +1301,32 @@ if (isset($_REQUEST['post_reply_insert'])) {
     }
 
     //reply Count 
-    $Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $commentID";
+    $Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $commentID AND present_reply_id IS NULL";
+    $reply_count = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($reply_count);
+
+    echo json_encode([
+        'reply_count' => $data['total'],
+    ]);
+}
+
+//   reply insert and count reply on comment reply 
+if (isset($_REQUEST['comment_reply_insert'])) {
+    $reply_value = trim(isset($_POST['reply_value']) ? $_POST['reply_value'] : "");
+    $userId = $_SESSION['login_user_id'];
+    $commentID = $_POST['comment_id'];
+    $PostID = $_POST['post_id'];
+    $reply_id = $_POST['reply_id'];
+
+    // insert reply
+    $reply_insert_query = "INSERT INTO twitter_post_comments_reply (`user_id`, `post_id`, `comment_id`, `comment_reply`, `present_reply_id`) VALUES ('$userId','$PostID','$commentID', '$reply_value', '$reply_id')";
+    $reply_insert_result = mysqli_query($conn, $reply_insert_query);
+    if ($reply_insert_result) {
+        $reply = true;
+    }
+
+    //reply Count 
+    $Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $commentID AND present_reply_id = '$reply_id' ";
     $reply_count = mysqli_query($conn, $Count_query);
     $data = mysqli_fetch_assoc($reply_count);
 
@@ -1618,14 +1695,14 @@ if (isset($_REQUEST['other_notifications_show'])) {
                         </div>
                         <span><?php echo $row['name']; ?></span>
                             <span> .<?php echo $output; ?></span>
-                           <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span>
+                           <!-- <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span> -->
                     <?php } else { ?>
                         <div class="like-profile-img">
                             <img src="profile_pic/<?php echo $row['profile_picture']; ?>" alt="" width="35">
                             <span style="font-weight: 700; font-size: 16px;"><?php echo $row['name']; ?></span>
                             <span> .<?php echo $output; ?></span>
                         </div>
-                        <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span>
+                        <!-- <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span> -->
                     <?php }
                     ?>
                 </div>
