@@ -543,14 +543,13 @@ $(document).ready(function () {
             }
         });
 
-        $(document).on("change", ".file_banner", function(){
+        $(document).on("change", "#banner-upload", function(){
             $(".fileerror").text("");
         });
-    });
 
-    $(document).on("click", ".close-edit-form", function () {
-        $("#edit-user-data")[0].reset();
-        $("#edit-profile-modal").fadeOut();
+        $(document).on("change", "#profile-upload", function(){
+            $(".profileerror").text("");
+        });
     });
 
     // start Insert Data using ajax request
@@ -559,7 +558,7 @@ $(document).ready(function () {
         var namepattern = /^[A-Za-z ]{3,20}$/;
         var usernamepattern = /^[a-z0-9_.]{5,15}$/;
         var emailpattern = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,6}$/;
-        let filePatter = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
+        let filePatter = /\.(gif|jpe?g|png)$/i;
         var isValid = true;
 
         if ($(".Name").val() === '') {
@@ -647,13 +646,27 @@ $(document).ready(function () {
             }
         }
 
-        if ($(".file_banner").val() != '') {
-            thisValue = $(".file_banner").val();
-            if (filePatter.test(thisValue)) {
+        if($("#banner-upload").val() === ''){
+            $(".fileerror").text("");
+        }else{
+            var file_value = $("#banner-upload").val();
+            if (filePatter.test(file_value)) {
                 $(".fileerror").text("");
             }else{
-                isValid = false;
                 $(".fileerror").text("please choose a valid file...!");
+                isValid = false;
+            }
+        }
+
+        if($("#profile-upload").val() === ''){
+            $(".profileerror").text("");
+        }else{
+            var profile_value = $("#profile-upload").val();
+            if (filePatter.test(profile_value)) {
+                $(".profileerror").text("");
+            }else{
+                $(".profileerror").text("please choose a valid profile picture...!");
+                isValid = false;
             }
         }
 
@@ -664,7 +677,7 @@ $(document).ready(function () {
         }
 
         if ($("#edit-valid-mail").val() === 'failed') {
-            isValid = false;
+            isValid = false
         }
 
         if ($("#edit-valid-username").val() === 'failed') {
@@ -693,6 +706,22 @@ $(document).ready(function () {
         });
     }
 
+    //remove banner
+    $(document).on("click", ".remove-banner", function () {
+        if (window.confirm("Are you sure you want to remove this cover picture?")) {
+            $.ajax({
+                url: "controller.php",
+                type: "POST",
+                data: {
+                    "remove_profile_bannner": "remove",
+                },
+                success: function (response) {
+                    $(".banner").html(response);
+                }
+            });
+        }
+    });
+
     // Open post-btn model 
     $(document).on("click", ".post-btn", function () {
         $(".popup-post-form")[0].reset();
@@ -707,30 +736,44 @@ $(document).ready(function () {
     });
 
     $(".popup-post-discription").focus(function(){
-            $(".errorpost").text("");
+            $(".error-post").text("");
     });
 
     $(".popup-post-file").change(function(){
-            $(".errorpost").text("");
-    })
+            $(".error-post").text("");
+    });
 
     // Post validation & Post Insert...
     $(document).on("submit", ".popup-post-form", function (event) {
         event.preventDefault();
         var isValid = true;
+        var filePattern = /\.(gif|jpe?g|png|mp4)$/i;
 
-        if ($(".popup-post-discription").val() === '' && $(".popup-post-file").val() === '') {
-            $(".errorpost").text("Your Post is Empty...!");
-            $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+        if ($(".popup-post-discription").val().trim() === '' && $(".popup-post-file").val() === '') {
+            $(".error-post").text("Your Post is Empty...!");
+            $(".error-post").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
             isValid = false;
         } else {
-            $(".errorpost").text("");
+            $(".error-post").text("");
+        }
+
+        if($(".popup-post-file").val() === ''){
+            
+        }else{
+            var profile_value = $(".popup-post-file").val();
+            if (filePattern.test(profile_value)) {
+                $(".error-post").text("");
+            }else{
+                $(".error-post").text("please choose a valid post file...!");
+                $(".error-post").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                isValid = false;
+            }
         }
 
         if (isValid) {
             var form = $('.popup-post-form')[0];
             var formData = new FormData(form);
-            formData.append('user_post_insert', 'formData');
+            formData.append('left_post_insert', 'formData');
             $.ajax({
                 url: "controller.php",
                 type: "POST",
@@ -759,17 +802,35 @@ $(document).ready(function () {
         $(".errorPost").text("");
     });
 
+    $(document).on("change", ".left-post-file", function(){
+        $(".errorPost").text("");
+    });
+
     // Post validation & Post Insert...
     $(document).on("submit", ".left-post-form", function (event) {
         event.preventDefault();
         var isValid = true;
+        let filePattern = /\.(gif|jpe?g|png|mp4)$/i;
 
-        if ($(".left-post-discription").val() === '' && $(".left-post-file").val() === '') {
+        if ($(".left-post-discription").val().trim() === '' && $(".left-post-file").val() === '') {
             $(".errorPost").text("Your Post is Empty...!");
             $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
             isValid = false;
         } else {
             $(".errorPost").text("");
+        }
+
+        if($(".left-post-file").val() === ''){
+            
+        }else{
+            var profile_value = $(".left-post-file").val();
+            if (filePattern.test(profile_value)) {
+                $(".errorPost").text("");
+            }else{
+                $(".errorPost").text("please choose a valid post file...!");
+                $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                isValid = false;
+            }
         }
 
         if (isValid) {
@@ -792,6 +853,7 @@ $(document).ready(function () {
                         $('.success-msg').html("");
                         $(".left-post-form")[0].reset();
                         $("#charcount").text("");
+                        $("#for-you").trigger("click");
                         profilepage();
                     }, 1500);
                 }
@@ -839,7 +901,6 @@ $(document).ready(function () {
         e.preventDefault();
         let commentID = $(this).data('comment-id'); // comment id
         let likeBtn = $(this); // like button
-
         $.ajax({
             url: 'controller.php',
             method: 'POST',
@@ -950,6 +1011,7 @@ $(document).ready(function () {
                         comment_btn.find('.comment-count').text(response.comment_count);
                     }
                     $("#post-comment-modal-overlay").fadeOut(300);
+                    // window.location.href="post_reply.php?post_id="+post_Id;
                 }
             });
         }
@@ -1113,11 +1175,8 @@ $(document).ready(function () {
                 let response = JSON.parse(followResult);
 
                 // Update counts (optional)
-                $(".other-followers-show").text(response.followers_count);
-                $(".other-following-show").text(response.following_count);
-                
-                // console.log("follower " +response.followers_coun);
-                // console.log("following " +response.following_count);
+                $(".other-profile-followers-show").text(response.followers_count);
+                $(".other-profile-following-show").text(response.following_count);
 
                 // Update button label and class
                 other_follow_button.removeClass("follow_back other-user_follow-btn").text("Follow");
@@ -1209,6 +1268,7 @@ $(document).ready(function () {
 
         if($("#reply_id_value").val()=== "reply"){
             var commentID = $("#send-comment-id").val();
+            var opponent_id = $(".send_opponent_id");
             var replyID = $("#reply-post-id").val();
             var comment_btn = $('.reply-comment-post[data-reply-id="' + replyID + '"]');
             if(comment_val === ''){
@@ -1227,8 +1287,6 @@ $(document).ready(function () {
                     },
                     success: function (replyResult) {
                         let response = JSON.parse(replyResult); 
-                        $("#otpur").html(response.reply_count);
-
                         // reply count update
                         if (response.reply_count == 0) {
                             comment_btn.find('.reply-count').text("");
@@ -1253,7 +1311,7 @@ $(document).ready(function () {
                         "post_reply_insert": commentID,
                         "post_id": post_id,
                         "comment_id": commentID,
-                        "reply_value": comment_val
+                        "reply_value": comment_val,
                     },
                     success: function (replyResult) {
                         let response = JSON.parse(replyResult); 
@@ -1266,6 +1324,7 @@ $(document).ready(function () {
                             comment_btn.find('.reply-count').text(response.reply_count);
                         }
                         $("#post-reply-modal-overlay").fadeOut(300);
+                        // window.location.href="reply.php?reply="+commentID;
                     }
                 });
             }

@@ -55,6 +55,7 @@ if(isset($_SESSION["userid"])){ ?>
         // find user information
         $userInfo_query = "SELECT * FROM `twitter_users` WHERE username = '$Username'";
         $user_result = mysqli_query($conn,$userInfo_query);
+        
         $user_data = mysqli_fetch_assoc($user_result);
 
         ?>
@@ -79,7 +80,8 @@ if(isset($_SESSION["userid"])){ ?>
 
         <div class="rightbar">
             <?php 
-              include 'layout/right_footer.php';
+            //   include 'layout/right_footer.php';
+            include 'layout/footer.php';
             ?>
         </div>
     </div>

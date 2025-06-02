@@ -10,7 +10,7 @@ if(isset($_SESSION["userid"])){ ?>
     <title>Notifications / X</title>
     <style>
         .rightbar{
-            margin-right: 58px;
+            margin-right: 85px;
             right: -17px;
         }
         .post {
@@ -47,7 +47,7 @@ if(isset($_SESSION["userid"])){ ?>
         ?>
 
         <div class="center-main">
-            <div class="center-header" style="width: 45.3%; border-bottom: none;">
+            <div class="center-header" style="width: 41.3%; border-bottom: none;">
                 <div id="Notifications">
                     <span style="font-size: 22px; color: black;">Post</span>
                 </div>
@@ -138,6 +138,7 @@ if(isset($_SESSION["userid"])){ ?>
                     ?> 
                     <div class="center-content" id="notifications_data" style="padding: 68px 0px;">
                         <div class="user-post-details">
+                            <input type="hidden" class="send_opponent_id" value="<?php echo $post['user_id'];?>">
                             <input type="hidden" id="send-post-id" value="<?php echo $_REQUEST['post_id']; ?>">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
@@ -162,6 +163,13 @@ if(isset($_SESSION["userid"])){ ?>
                                         @<?php echo $post['username'] ?>
                                     </a>
                                     <b class="user-post-time"><?php echo $output; ?></b>
+                                    <?php
+                                    if($post['user_id'] === $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto;" class="delete-post-reply" data-id-post="<?= $post['post_id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
 
@@ -239,7 +247,7 @@ if(isset($_SESSION["userid"])){ ?>
                     u.profile_picture
                     FROM twitter_post_comments AS c
                     JOIN twitter_users AS u ON c.user_id = u.id
-                    WHERE c.post_id = $post_ID ORDER BY c.created_at DESC";
+                    WHERE c.post_id = $post_ID ORDER BY c.created_at DESC"; 
 
                     $comment_result = mysqli_query($conn, $comment_query);
 
@@ -278,6 +286,7 @@ if(isset($_SESSION["userid"])){ ?>
 
                         //like Count 
                         $post_Id = $data['comment_id'];
+                        $useridd = $_SESSION['login_user_id'];
                         $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $post_Id
                         AND likeable_type = 'comment'";
 
@@ -285,12 +294,11 @@ if(isset($_SESSION["userid"])){ ?>
                         $likeData = mysqli_fetch_assoc($LikeCount);
 
                         //comment reply Count 
-                        $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $data[comment_id]";
+                        $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $data[comment_id] AND present_reply_id IS NULL";
                         $reply_count = mysqli_query($conn, $reply_Count_query);
                         $replydata = mysqli_fetch_assoc($reply_count);
 
                         // check login user liked post
-                        $useridd = $_SESSION['login_user_id'];
                         $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND liked_id = '$post_Id'
                         AND likeable_type = 'comment'";
                         $userLiked_query = mysqli_query($conn, $query_liked_user);
@@ -312,6 +320,18 @@ if(isset($_SESSION["userid"])){ ?>
                                     <b class="user-post-time">
                                         <?php echo $commenttime;?>
                                     </b>
+                                    <?php
+                                    if($post['user_id'] === $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto; margin-left: -50px;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    elseif($data['user_id'] === $_SESSION['login_user_id']) { ?>
+                                        <div style="display: inline; margin: auto; margin-left: -50px;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
+                                            <i style="color: red; margin-left: 110px;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
  
@@ -371,6 +391,53 @@ if(isset($_SESSION["userid"])){ ?>
     <?php include 'layout/post_model.php'; ?>
     <?php include 'layout/add_comment_model.php'; ?>
     <?php include 'layout/reply_model.php'; ?>
+
+    <script>
+        // delete post
+        $(document).on('click', '.delete-post-reply', function (){
+            var Post_ID = $(this).data('id-post');
+            if (window.confirm("Are you sure you want to delete this post?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "post_delete_id": Post_ID,
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                window.location.href="profile.php";
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+
+        // delete Comment
+        $(document).on('click', '.delete-post-comment', function (){
+            var Comment_id = $(this).data('id-comment');
+            var post_id = $("#send-post-id").val();
+            if (window.confirm("Are you sure you want to delete this Commment?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "comment_delete_id": Comment_id,
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                window.location.href = "post_reply.php?post_id=" + post_id;
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 <?php 
